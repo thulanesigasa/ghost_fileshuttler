@@ -6,7 +6,7 @@
     --accent-hover: #00c3cf;
     --text-primary: #ffffff;
     --text-secondary: #94a0b8;
-    --error: #ff4a4a;
+    --error: #00c3cf;
     --success: #00ff9d;
     --font-family: 'Outfit', sans-serif;
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -458,6 +458,22 @@ input[type="password"]:focus {
         margin-bottom: 20px !important;
     }
 
+    .mil-content {
+        padding-top: 100px !important;
+    }
+
+    .mil-frame-top {
+        padding: 20px !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+
+    .mil-menu-btn {
+        font-size: 11px !important;
+        line-height: 1.4 !important;
+    }
+
     .auth-card {
         padding: 1.5rem !important;
     }
@@ -538,7 +554,7 @@ input[type="password"]:focus {
 }
 
 .mil-modal-icon {
-    color: #ff4a4a;
+    color: #00c3cf;
 }
 
 .mil-modal-actions {
@@ -558,7 +574,7 @@ input[type="password"]:focus {
 }
 
 .mil-modal-btn-main {
-    background: #ff4a4a !important;
+    background: #00c3cf !important;
     color: #fff !important;
     width: auto !important;
     padding: 0 30px !important;
@@ -568,7 +584,7 @@ input[type="password"]:focus {
 }
 
 .mil-modal-btn-main:hover {
-    background: #ff6060 !important;
+    background: #00f0ff !important;
     transform: translateY(-2px);
 }
 
