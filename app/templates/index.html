@@ -37,8 +37,8 @@
         <div class="mil-frame">
             <div class="mil-frame-top">
                 <a href="/" class="mil-logo">Ghost_FS</a>
-                <div class="mil-menu-btn" style="color: var(--text-main); font-size: 14px; opacity: 0.8;">
-                    IP: {{ host_ip }}
+                <div class="mil-menu-btn" style="color: var(--accent-1); font-size: 14px; font-weight: 600;">
+                    NODE_ID: {{ host_ip }}
                 </div>
             </div>
             <div class="mil-frame-bottom">
@@ -254,6 +254,105 @@
                         </div>
                     </section>
                     <!-- services end -->
+
+                    <!-- team -->
+                    <section class="mil-dark-bg">
+                        <div class="container mil-p-120-30">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-lg-5 col-xl-4">
+
+                                    <div class="mil-mb-90">
+                                        <h2 class="mil-up mil-mb-60">Meet Our <br><span
+                                                class="mil-thin">Engineers</span></h2>
+                                        <p class="mil-up mil-mb-30">We are a team of decentralized security researchers
+                                            passionate about local-first data privacy. Our backgrounds span low-level
+                                            networking and high-level UX design.</p>
+                                        <h4 class="mil-up mil-mb-60">Securing your stems, <br>one packet at a time.</h4>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mil-team-list">
+                                        <div class="row mil-mb-60">
+                                            <div class="col-sm-6">
+                                                <div class="mil-team-card mil-up mil-mb-30"
+                                                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;">
+                                                    <img src="{{ url_for('static', filename='img/faces/8.png') }}"
+                                                        alt="Lead" style="width: 100%; border-radius: 15px;">
+                                                    <div class="mil-description mil-mt-20">
+                                                        <h5 class="mil-muted mil-mb-5">Ghost Protocol</h5>
+                                                        <p class="mil-link mil-light-soft">Core Developer</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="mil-team-card mil-up mil-mb-30"
+                                                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;">
+                                                    <img src="{{ url_for('static', filename='img/faces/10.png') }}"
+                                                        alt="Dev" style="width: 100%; border-radius: 15px;">
+                                                    <div class="mil-description mil-mt-20">
+                                                        <h5 class="mil-muted mil-mb-5">Shuttle Node</h5>
+                                                        <p class="mil-link mil-light-soft">Network Architect</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- team end -->
+
+                    <!-- reviews -->
+                    <section class="mil-dark-bg mil-p-120-120" style="background: #050505;">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <span class="mil-suptitle mil-suptitle-right mil-light-soft mil-up">Network
+                                        performance is <br>the heartbeat of shared creativity.</span>
+                                </div>
+                            </div>
+
+                            <h2 class="mil-center mil-up mil-mb-60">Producer <span class="mil-thin">Voices:</span>
+                                <br>Why They Use <span class="mil-thin">Ghost_FS</span></h2>
+
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="mil-review-item mil-center mil-up">
+                                        <p class="mil-text-xl mil-light-soft mil-mb-60">"The latency on my LAN is
+                                            sub-millisecond. Sending Amapiano stems between my Windows Studio and Kali
+                                            Linux sandbox has never been this seamless. Pure ghost speed."</p>
+                                        <div class="mil-avatar mil-mb-30" style="width: 80px; margin: 0 auto;">
+                                            <img src="{{ url_for('static', filename='img/faces/1.png') }}"
+                                                alt="Producer" style="width: 100%; border-radius: 50%;">
+                                        </div>
+                                        <h5 class="mil-muted">Amapiano Legend</h5>
+                                        <p class="mil-link mil-light-soft">verified node user</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- reviews end -->
+
+                    <!-- LAN IP Note -->
+                    <section class="mil-dark-bg mil-p-0-120">
+                        <div class="container">
+                            <div class="mil-divider mil-mb-60"></div>
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8 mil-center">
+                                    <p class="mil-text-sm mil-light-soft">
+                                        <span class="mil-accent-1">PRO-TIP:</span> To access Ghost_FS from other devices
+                                        on your LAN, use your Host machine's IP address instead of the NODE_ID shown
+                                        above.
+                                        You can find it by running <code>ip addr</code> or <code>ifconfig</code> on this
+                                        machine.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                     {% endif %}
 
             </div>
