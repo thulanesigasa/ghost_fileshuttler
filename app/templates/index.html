@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ghost_FileShuttler</title>
+    <meta name="description" content="A secure, highly-performant local file-sharing system for Amapiano stems and more.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Ghost_FileShuttler",
+      "operatingSystem": "Cross-Platform",
+      "applicationCategory": "File Sharing Application",
+      "description": "A secure local-network file-sharing system designed for speed and simplicity.",
+      "isAccessibleForFree": true
+    }
+    </script>
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM11 19.93C7.06 19.43 4 16.05 4 12C4 7.95 7.06 4.57 11 4.07V19.93ZM13 4.07C16.94 4.57 20 7.95 20 12C20 16.05 16.94 19.43 13 19.93V4.07Z" fill="var(--accent)"/>
+                </svg>
+                <h1>Ghost_FileShuttler</h1>
+            </div>
+            <div class="host-info">
+                Host IP: <span>{{ host_ip }}</span>
+            </div>
+            {% if is_auth %}
+            <button id="logout-btn" class="btn btn-secondary">Lock Vault</button>
+            {% endif %}
+        </header>
+
+        <main>
+            {% if not is_auth %}
+            <section class="auth-section">
+                <div class="glass-card auth-card">
+                    <h2>Vault Access Required</h2>
+                    <p>Enter the Ghost Key to view and transfer files.</p>
+                    <form id="auth-form">
+                        <input type="password" id="pin-input" placeholder="Enter PIN" inputmode="numeric" required>
+                        <button type="submit" class="btn btn-primary">Unlock Vault</button>
+                    </form>
+                    <div id="auth-error" class="error-msg"></div>
+                </div>
+            </section>
+            {% else %}
+            <section class="dashboard-section">
+                <div class="glass-card upload-card">
+                    <h2>Shuttle Terminal</h2>
+                    <div class="drop-zone" id="drop-zone">
+                        <div class="drop-icon">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z" fill="currentColor"/>
+                            </svg>
+                        </div>
+                        <p>Drag & Drop Amapiano stems here</p>
+                        <span class="or-divider">or</span>
+                        <label for="file-upload" class="btn btn-secondary">Browse Files</label>
+                        <input type="file" id="file-upload" hidden>
+                    </div>
+                    <div id="upload-progress" class="progress-bar-container hidden">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div id="upload-status" class="status-msg"></div>
+                </div>
+
+                <div class="glass-card vault-card">
+                    <h2>Secure Vault</h2>
+                    <div class="file-list-container">
+                        <ul id="file-list" class="file-list">
+                            <!-- Files will be dynamically populated here -->
+                            <li class="loading">Fetching secured files...</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+            {% endif %}
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

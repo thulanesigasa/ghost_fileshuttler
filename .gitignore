@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.env
+shuttle_vault/
+nginx/certs/
+venv/
+.idea/
+.vscode/
