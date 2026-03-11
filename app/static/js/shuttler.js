@@ -142,11 +142,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const response = await fetch('/files');
-            if (response.status === 401) {
-                // Not authenticated
-                return;
-            }
+            if (response.status === 401) return;
+
             const data = await response.json();
+            const currentJSON = JSON.stringify(data);
+
+            // Flicker prevention: Only re-render if the file list has changed
+            if (window.lastFilesJSON === currentJSON) return;
+            window.lastFilesJSON = currentJSON;
+
             fileList.innerHTML = '';
 
             if (data.length === 0) {
@@ -174,7 +178,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 fileList.appendChild(li);
             });
         } catch (err) {
-            fileList.innerHTML = '<li style="color: red;">Error fetching files</li>';
+            console.error('Ghost_FS Sync Error:', err);
         }
+    }
+
+    // Automatic Sync (Polling)
+    // Synchronize the vault every 3 seconds to ensure all users see new uploads immediately.
+    if (fileList) {
+        setInterval(loadFiles, 3000);
     }
 });
