@@ -37,8 +37,10 @@
         <div class="mil-frame">
             <div class="mil-frame-top">
                 <a href="/" class="mil-logo">Ghost_FS</a>
-                <div class="mil-menu-btn" style="color: var(--accent-1); font-size: 14px; font-weight: 600;">
-                    NODE_ID: {{ host_ip }}
+                <div class="mil-menu-btn"
+                    style="color: var(--accent-1); font-size: 14px; font-weight: 600; text-align: right; line-height: 1.2;">
+                    NODE_ID: {{ host_ip }}<br>
+                    LAN_IP: {{ lan_ip }}
                 </div>
             </div>
             <div class="mil-frame-bottom">
@@ -74,7 +76,8 @@
                                     <input type="password" id="pin-input" placeholder="Enter PIN" inputmode="numeric"
                                         required
                                         style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 30px; margin-bottom: 2rem;">
-                                    <button type="submit" class="mil-button mil-arrow-place">
+                                    <button type="submit" class="mil-button"
+                                        style="padding: 0 40px; justify-content: center; height: 50px; display: inline-flex; width: auto; margin: 0 auto;">
                                         <span>Unlock Vault</span>
                                     </button>
                                 </form>
@@ -315,7 +318,8 @@
                             </div>
 
                             <h2 class="mil-center mil-up mil-mb-60">Producer <span class="mil-thin">Voices:</span>
-                                <br>Why They Use <span class="mil-thin">Ghost_FS</span></h2>
+                                <br>Why They Use <span class="mil-thin">Ghost_FS</span>
+                            </h2>
 
                             <div class="row justify-content-center">
                                 <div class="col-lg-8">
@@ -336,23 +340,6 @@
                     </section>
                     <!-- reviews end -->
 
-                    <!-- LAN IP Note -->
-                    <section class="mil-dark-bg mil-p-0-120">
-                        <div class="container">
-                            <div class="mil-divider mil-mb-60"></div>
-                            <div class="row justify-content-center">
-                                <div class="col-lg-8 mil-center">
-                                    <p class="mil-text-sm mil-light-soft">
-                                        <span class="mil-accent-1">PRO-TIP:</span> To access Ghost_FS from other devices
-                                        on your LAN, use your Host machine's IP address instead of the NODE_ID shown
-                                        above.
-                                        You can find it by running <code>ip addr</code> or <code>ifconfig</code> on this
-                                        machine.
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
                     {% endif %}
 
             </div>

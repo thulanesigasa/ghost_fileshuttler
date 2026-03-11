@@ -54,8 +54,9 @@ def get_host_ip():
 @app.route('/')
 def index():
     host_ip = get_host_ip()
+    lan_ip = os.environ.get('LAN_IP', host_ip)  # Default to internal if not set
     is_auth = session.get('authenticated', False)
-    return render_template('index.html', host_ip=host_ip, is_auth=is_auth)
+    return render_template('index.html', host_ip=host_ip, lan_ip=lan_ip, is_auth=is_auth)
 
 @app.route('/auth', methods=['POST'])
 def authenticate():
