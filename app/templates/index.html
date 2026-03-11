@@ -28,7 +28,7 @@
     </script>
 </head>
 
-<body class="mil-dark-bg">
+<body class="mil-dark-bg" style="background-color: #000000;">
 
     <!-- wrapper -->
     <div class="mil-wrapper" id="top">
@@ -131,8 +131,131 @@
 
                         </div>
                     </div>
-                </section>
-                <!-- banner end -->
+                    <!-- banner end -->
+
+                    {% if not is_auth %}
+                    <!-- about -->
+                    <section id="about" class="mil-dark-bg">
+                        <div class="container mil-p-120-30">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-lg-6 col-xl-5">
+
+                                    <div class="mil-mb-90">
+                                        <h2 class="mil-up mil-mb-60">Learn About <br><span
+                                                class="mil-thin">Ghost_FileShuttler</span></h2>
+                                        <p class="mil-up mil-mb-30">Ghost_FileShuttler is a dynamic, localized file
+                                            delivery protocol driven by
+                                            a shared commitment to transforming innovative ideas into impactful
+                                            solutions. Our
+                                            system ensures lightning-fast local transfers and extreme containerized
+                                            security.</p>
+
+                                        <p class="mil-up mil-mb-60">Privacy is the cornerstone of our approach. We
+                                            believe
+                                            that files traversing your LAN should never touch the cloud. By leveraging
+                                            our
+                                            atomic database transactions and isolated network segments, we keep your
+                                            data secure.</p>
+
+                                        <div class="mil-about-quote">
+                                            <div class="mil-avatar mil-up">
+                                                <img src="{{ url_for('static', filename='img/faces/1.png') }}"
+                                                    alt="Founder">
+                                            </div>
+                                            <h6 class="mil-quote mil-up">Innovating with Purpose: <span
+                                                    class="mil-thin">Delivering Exceptional</span> Secure Solutions</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-5">
+
+                                    <div class="mil-about-photo mil-mb-90">
+                                        <div class="mil-lines-place"></div>
+                                        <div class="mil-up mil-img-frame" style="padding-bottom: 160%;">
+                                            <img src="{{ url_for('static', filename='img/photo/12.png') }}" alt="img"
+                                                class="mil-scale" data-value-1="1" data-value-2="1.2">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- about end -->
+
+                    <!-- services -->
+                    <section class="mil-dark-bg">
+                        <div class="mi-invert-fix">
+                            <div class="mil-animation-frame">
+                                <div class="mil-animation mil-position-1 mil-scale" data-value-1="2.4"
+                                    data-value-2="1.4" style="top: 300px; right: -100px"></div>
+                                <div class="mil-animation mil-position-2 mil-scale" data-value-1="2" data-value-2="1"
+                                    style="left: 150px"></div>
+                            </div>
+                            <div class="container mil-p-120-0">
+
+                                <div class="mil-mb-120">
+                                    <div class="row">
+                                        <div class="col-lg-10">
+                                            <span
+                                                class="mil-suptitle mil-light-soft mil-suptitle-right mil-up">Dedicated
+                                                Protocol Driving Your Local<br> Network Speed</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mil-complex-text justify-content-center mil-up mil-mb-15">
+                                        <span class="mil-text-image"><img
+                                                src="{{ url_for('static', filename='img/photo/2.png') }}"
+                                                alt="team"></span>
+                                        <h2 class="mil-h1 mil-muted mil-center">Secure <span
+                                                class="mil-thin">Transfers</span></h2>
+                                    </div>
+                                    <div class="mil-complex-text justify-content-center mil-up">
+                                        <h2 class="mil-h1 mil-muted mil-center">For Your <span
+                                                class="mil-thin">Workspace.</span></h2>
+                                    </div>
+                                </div>
+
+                                <div class="row mil-services-grid m-0">
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Encrypted<br>Transmission</h5>
+                                            <p class="mil-light-soft mil-mb-30">We craft secure protocols that capture
+                                                your files securely on your network. All files flow through HTTPS and
+                                                are protected from outside access.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Amapiano<br>Stem Focus</h5>
+                                            <p class="mil-light-soft mil-mb-30">Optimized for large audio stems,
+                                                FileShuttler streams your content in real-time, completely bypassing the
+                                                internet overhead.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Ghost Key<br>Authentication</h5>
+                                            <p class="mil-light-soft mil-mb-30">Use synchronized PIN authentication
+                                                backed by PostgreSQL to instantly share access to temporary local
+                                                endpoints securely.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Edge<br>Protection</h5>
+                                            <p class="mil-light-soft mil-mb-30">The ModSecurity Web Application Firewall
+                                                acts as a shield against advanced local network threats such as SQL
+                                                injection protocols.</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- services end -->
+                    {% endif %}
 
             </div>
         </div>
