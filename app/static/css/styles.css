@@ -15,6 +15,10 @@
     --success: #00ff9d;
     --font-family: 'Outfit', sans-serif;
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* Template compatibility */
+    --bg: var(--bg-dark);
+    --text-main: var(--text-primary);
 }
 
 .light-mode {
@@ -23,6 +27,12 @@
     --border-color: var(--border-color-light);
     --text-primary: var(--text-primary-light);
     --text-secondary: var(--text-secondary-light);
+
+    /* Template compatibility overrides */
+    --bg: var(--bg-light);
+    --bg-alt: #ffffff;
+    --text-main: var(--text-primary-light);
+    --text-muted: var(--text-secondary-light);
 }
 
 * {
@@ -477,9 +487,9 @@ input[type="password"]:focus {
 
     .mil-frame-top {
         padding: 20px !important;
-        background: rgba(0, 0, 0, 0.8) !important;
-        background-color: rgba(0, 0, 0, 0.8) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        background: var(--bg-dark) !important;
+        background-color: var(--bg-dark) !important;
+        border-bottom: 1px solid var(--border-color) !important;
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
     }
@@ -552,13 +562,22 @@ input[type="password"]:focus {
     width: 90%;
     padding: 50px 40px;
     border-radius: 32px;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--border-color);
     text-align: center;
-    background: #080808;
+    background: var(--bg-dark);
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
     position: relative;
     overflow: hidden;
     animation: modalSlideUp 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.light-mode .mil-modal-content {
+    background: #ffffff;
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.1);
+}
+
+.light-mode .mil-modal-wrapper {
+    background: rgba(255, 255, 255, 0.8);
 }
 
 /* Reset any template-induced pseudo elements */
