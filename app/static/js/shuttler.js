@@ -254,6 +254,33 @@ document.addEventListener('DOMContentLoaded', () => {
         modalAction = null;
     });
 
+    // Theme Management
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const body = document.body;
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('ghost-theme') || 'dark';
+    if (savedTheme === 'light') {
+        body.classList.add('light-mode');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+
+    if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            const isLight = body.classList.contains('light-mode');
+
+            if (isLight) {
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('ghost-theme', 'light');
+            } else {
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('ghost-theme', 'dark');
+            }
+        });
+    }
+
     // Automatic Sync (Polling)
     // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
     if (fileList) {

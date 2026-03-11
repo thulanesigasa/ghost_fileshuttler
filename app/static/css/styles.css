@@ -1,15 +1,28 @@
 :root {
-    --bg-dark: #0f1115;
+    --bg-dark: #000000;
+    --bg-light: #f4f7fa;
     --bg-card: rgba(25, 28, 35, 0.6);
+    --bg-card-light: rgba(255, 255, 255, 0.9);
     --border-color: rgba(255, 255, 255, 0.1);
+    --border-color-light: rgba(0, 0, 0, 0.05);
     --accent: #00f0ff;
     --accent-hover: #00c3cf;
     --text-primary: #ffffff;
+    --text-primary-light: #1a1a1a;
     --text-secondary: #94a0b8;
+    --text-secondary-light: #64748b;
     --error: #00c3cf;
     --success: #00ff9d;
     --font-family: 'Outfit', sans-serif;
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.light-mode {
+    --bg-dark: var(--bg-light);
+    --bg-card: var(--bg-card-light);
+    --border-color: var(--border-color-light);
+    --text-primary: var(--text-primary-light);
+    --text-secondary: var(--text-secondary-light);
 }
 
 * {
@@ -465,6 +478,8 @@ input[type="password"]:focus {
     .mil-frame-top {
         padding: 20px !important;
         background: rgba(0, 0, 0, 0.8) !important;
+        background-color: rgba(0, 0, 0, 0.8) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
     }
