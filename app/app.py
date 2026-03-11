@@ -119,6 +119,25 @@ def download_file(file_id):
     
     return send_from_directory(VAULT_DIR, file_meta.filename, as_attachment=True)
 
+@app.route('/delete/<int:file_id>', methods=['POST', 'DELETE'])
+@login_required
+def delete_file(file_id):
+    file_meta = FileMetadata.query.get(file_id)
+    if not file_meta:
+        return jsonify({'error': 'File not found'}), 404
+    
+    try:
+        if os.path.exists(file_meta.filepath):
+            os.remove(file_meta.filepath)
+        
+        db.session.delete(file_meta)
+        db.session.commit()
+        return jsonify({'message': 'File deleted successfully'})
+    except Exception as e:
+        db.session.rollback()
+        print(f"Delete error: {e}")
+        return jsonify({'error': f'Failed to delete file: {str(e)}'}), 500
+
 @app.route('/robots.txt')
 def static_from_root():
     return send_from_directory(app.static_folder, request.path[1:])

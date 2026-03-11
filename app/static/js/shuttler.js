@@ -165,15 +165,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 const li = document.createElement('li');
                 li.style.cssText = 'display:flex; justify-content:space-between; align-items:center; border: 1px solid rgba(255,255,255,0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 12px;';
                 li.innerHTML = `
-                    <div class="file-info">
+                    <div class="file-info" style="flex-grow: 1;">
                         <span class="file-name mil-bold" title="${file.filename}">${file.filename}</span><br/>
                         <span class="file-date mil-muted mil-text-sm">${dateStr}</span>
                     </div>
-                    <a href="/download/${file.id}" class="mil-button mil-icon-button-sm mil-arrow-place" title="Download">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5 20H19V18H5V20ZM19 9H15V3H9V9H5L12 16L19 9Z" fill="currentColor"/>
-                        </svg>
-                    </a>
+                    <div class="file-actions" style="display: flex; gap: 10px;">
+                        <a href="/download/${file.id}" class="mil-button mil-icon-button-sm mil-arrow-place" title="Download">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 20H19V18H5V20ZM19 9H15V3H9V9H5L12 16L19 9Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <button onclick="deleteFile(${file.id}, '${file.filename}')" class="mil-button mil-icon-button-sm" style="background: rgba(255, 74, 74, 0.1); color: #ff4a4a; border: 1px solid rgba(255, 74, 74, 0.2);" title="Delete">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
                 `;
                 fileList.appendChild(li);
             });
@@ -181,6 +188,26 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Ghost_FS Sync Error:', err);
         }
     }
+
+    // Deletion Logic
+    window.deleteFile = async function (fileId, filename) {
+        if (!confirm(`Are you sure you want to permanently remove "${filename}" from the Ghost Vault?`)) return;
+
+        try {
+            const response = await fetch(`/delete/${fileId}`, { method: 'DELETE' });
+            const data = await response.json();
+
+            if (response.ok) {
+                // Instantly clear local cache to trigger refresh
+                window.lastFilesJSON = "";
+                loadFiles();
+            } else {
+                alert(data.error || 'Failed to delete file');
+            }
+        } catch (err) {
+            alert('Network error occurred during deletion');
+        }
+    };
 
     // Automatic Sync (Polling)
     // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
