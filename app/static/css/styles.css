@@ -175,10 +175,15 @@ input[type="password"]:focus {
 
 /* Dashboard */
 .dashboard-section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    display: flex !important;
+    flex-wrap: wrap;
     gap: 2rem;
     animation: fadeInUp 0.6s ease-out;
+}
+
+.dashboard-section>[class*="col-"] {
+    flex: 1 1 45%;
+    min-width: 300px;
 }
 
 /* Drag and Drop Zone */
@@ -444,6 +449,15 @@ input[type="password"]:focus {
         text-align: center;
     }
 
+    .mil-p-120-120 {
+        padding-top: 40px !important;
+        padding-bottom: 40px !important;
+    }
+
+    .mil-mb-60 {
+        margin-bottom: 20px !important;
+    }
+
     .auth-card {
         padding: 1.5rem !important;
     }
@@ -460,6 +474,15 @@ input[type="password"]:focus {
 
     .mil-menu-btn {
         text-align: left !important;
+    }
+
+    .dashboard-section {
+        display: block !important;
+    }
+
+    .dashboard-section>[class*="col-"] {
+        width: 100% !important;
+        margin-bottom: 30px;
     }
 
     .file-list li {
