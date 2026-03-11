@@ -23,7 +23,7 @@ body {
     background-color: var(--bg-dark);
     color: var(--text-primary);
     min-height: 100vh;
-    background-image: 
+    background-image:
         radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
         radial-gradient(circle at 85% 30%, rgba(0, 255, 157, 0.05), transparent 25%);
     background-attachment: fixed;
@@ -31,7 +31,9 @@ body {
     overflow-x: hidden;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
     font-weight: 700;
 }
 
@@ -61,6 +63,7 @@ header {
     font-size: 1.5rem;
     background: linear-gradient(90deg, #fff, var(--text-secondary));
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
 }
@@ -68,7 +71,7 @@ header {
 .host-info {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     padding: 0.5rem 1rem;
     border-radius: 20px;
     border: 1px solid var(--border-color);
@@ -117,7 +120,7 @@ input[type="password"] {
     width: 100%;
     padding: 1rem;
     border-radius: 12px;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     border: 1px solid var(--border-color);
     color: #fff;
     font-size: 1.25rem;
@@ -167,7 +170,7 @@ input[type="password"]:focus {
 
 .btn-secondary:hover {
     border-color: #fff;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255, 255, 255, 0.05);
 }
 
 /* Dashboard */
@@ -185,7 +188,7 @@ input[type="password"]:focus {
     padding: 4rem 2rem;
     text-align: center;
     transition: var(--transition);
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     cursor: pointer;
     margin-top: 1.5rem;
 }
@@ -236,7 +239,7 @@ input[type="password"]:focus {
 }
 
 .file-list-container::-webkit-scrollbar-track {
-    background: rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
 
@@ -250,7 +253,7 @@ input[type="password"]:focus {
 }
 
 .file-list li {
-    background: rgba(0,0,0,0.3);
+    background: rgba(0, 0, 0, 0.3);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 1rem;
@@ -262,7 +265,7 @@ input[type="password"]:focus {
 }
 
 .file-list li:hover {
-    border-color: rgba(255,255,255,0.2);
+    border-color: rgba(255, 255, 255, 0.2);
     transform: translateX(5px);
 }
 
@@ -329,7 +332,7 @@ input[type="password"]:focus {
 .progress-bar-container {
     width: 100%;
     height: 6px;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 3px;
     margin-top: 1.5rem;
     overflow: hidden;
@@ -344,31 +347,138 @@ input[type="password"]:focus {
 
 /* Animations */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-20px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Responsive */
+/* Responsive Overrides */
+
+/* Large Tablets & Laptops (up to 1024px) */
+@media (max-width: 1024px) {
+    .app-container {
+        padding: 1.5rem;
+    }
+
+    .mil-banner-content {
+        padding-top: 10vh !important;
+    }
+
+    .mil-frame-top {
+        padding: 20px 30px !important;
+    }
+}
+
+/* Tablets (up to 768px) */
 @media (max-width: 768px) {
     .dashboard-section {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
-    
+
+    .mil-banner-content {
+        padding-top: 8vh !important;
+    }
+
+    .mil-frame-top {
+        padding: 15px 20px !important;
+    }
+
+    .mil-logo {
+        font-size: 1.2rem !important;
+    }
+
+    .mil-menu-btn {
+        font-size: 12px !important;
+    }
+
+    .file-name {
+        max-width: 150px;
+    }
+}
+
+/* Mobile Devices (up to 480px) */
+@media (max-width: 480px) {
     .app-container {
         padding: 1rem;
     }
-    
-    .drop-zone {
-        padding: 2rem 1rem;
+
+    h1 {
+        font-size: 2.5rem !important;
+    }
+
+    h2 {
+        font-size: 2rem !important;
+    }
+
+    .mil-banner-content {
+        padding-top: 5vh !important;
+        text-align: center;
+    }
+
+    .auth-card {
+        padding: 1.5rem !important;
+    }
+
+    .mil-modal-content {
+        padding: 25px !important;
+    }
+
+    .mil-frame-top {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 5px;
+    }
+
+    .mil-menu-btn {
+        text-align: left !important;
+    }
+
+    .file-list li {
+        padding: 0.75rem;
+    }
+
+    .file-actions {
+        gap: 5px;
+    }
+
+    .mil-icon-button-sm {
+        width: 40px !important;
+        height: 40px !important;
+    }
+}
+
+/* Fix for NODE_ID and LAN_IP visibility on very small screens */
+@media (max-width: 320px) {
+    .mil-menu-btn {
+        font-size: 10px !important;
     }
 }

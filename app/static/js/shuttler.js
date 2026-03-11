@@ -189,25 +189,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Deletion Logic
-    window.deleteFile = async function (fileId, filename) {
-        if (!confirm(`Are you sure you want to permanently remove "${filename}" from the Ghost Vault?`)) return;
+    // Modal Elements
+    const ghostModal = document.getElementById('ghost-modal');
+    const modalMessage = document.getElementById('modal-message');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalConfirmText = document.getElementById('modal-confirm-text');
+    const modalCancelText = document.getElementById('modal-cancel-text');
 
-        try {
-            const response = await fetch(`/delete/${fileId}`, { method: 'DELETE' });
-            const data = await response.json();
+    let modalAction = null;
 
-            if (response.ok) {
-                // Instantly clear local cache to trigger refresh
-                window.lastFilesJSON = "";
-                loadFiles();
-            } else {
-                alert(data.error || 'Failed to delete file');
-            }
-        } catch (err) {
-            alert('Network error occurred during deletion');
+    // Themed Alert/Confirm Utility
+    window.ghostAlert = function (message, isConfirm = false, action = null) {
+        modalMessage.innerHTML = message;
+        modalAction = action;
+
+        if (isConfirm) {
+            modalCancel.classList.remove('hidden');
+            modalConfirmText.textContent = "Continue";
+            modalCancelText.textContent = "Cancel";
+        } else {
+            modalCancel.classList.add('hidden');
+            modalConfirmText.textContent = "Got it";
         }
+
+        ghostModal.classList.remove('hidden');
     };
+
+    // Deletion Logic
+    window.deleteFile = function (fileId, filename) {
+        ghostAlert(
+            `Are you sure you want to permanently remove <br><span class="mil-accent-1">"${filename}"</span> from the Ghost Vault?`,
+            true,
+            async () => {
+                try {
+                    const response = await fetch(`/delete/${fileId}`, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        window.lastFilesJSON = "";
+                        loadFiles();
+                    } else {
+                        ghostAlert(data.error || 'Failed to delete file');
+                    }
+                } catch (err) {
+                    console.error('Deletion error:', err);
+                    ghostAlert('Network error during deletion. The Ghost Node might be unreachable.');
+                }
+            }
+        );
+    };
+
+    modalCancel.addEventListener('click', () => {
+        ghostModal.classList.add('hidden');
+        modalAction = null;
+    });
+
+    modalConfirm.addEventListener('click', () => {
+        ghostModal.classList.add('hidden');
+        if (modalAction) modalAction();
+        modalAction = null;
+    });
 
     // Automatic Sync (Polling)
     // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
