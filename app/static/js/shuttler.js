@@ -52,6 +52,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Dashboard Logic
     if (dropZone) {
+
+        // --- Browser Back Button Logout Logic ---
+        // 1. If we are in the vault, push a state so the back button is available.
+        if (window.location.hash !== '#vault') {
+            history.pushState(null, '', window.location.pathname + '#vault');
+        }
+
+        // 2. Listen for the back button (popstate). If they leave the #vault hash, log them out.
+        window.addEventListener('popstate', async (event) => {
+            if (window.location.hash !== '#vault') {
+                await fetch('/logout', { method: 'POST' });
+                window.location.reload();
+            }
+        });
+        // ----------------------------------------
+
         loadFiles();
 
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
