@@ -447,6 +447,10 @@ input[type="password"]:focus {
 
 /* Mobile Devices (up to 480px) */
 @media (max-width: 480px) {
+    .mil-frame {
+        display: none !important;
+    }
+
     .app-container {
         padding: 1rem;
     }
