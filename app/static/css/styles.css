@@ -387,28 +387,37 @@ input[type="password"]:focus {
 
 /* Responsive Overrides */
 
-/* Large Tablets & Laptops (up to 1200px) */
+/* All sub-desktop screens (up to 1200px) */
 @media (max-width: 1200px) {
-    .mil-frame .mil-frame-top {
-        background-color: transparent !important;
-        border-bottom: none !important;
-    }
-}
 
-/* Large Tablets & Laptops (up to 1024px) */
-@media (max-width: 1024px) {
-    .app-container {
-        padding: 1.5rem;
-    }
-
-    .mil-banner-content {
-        padding-top: 10vh !important;
+    /* KEY FIX: Make the frame static so it flows with the page.
+       This eliminates the white gap and text clipping permanently. */
+    .mil-frame {
+        position: static !important;
+        height: auto !important;
+        padding: 0 !important;
+        z-index: 999 !important;
+        background-color: #0f1115 !important;
     }
 
     .mil-frame .mil-frame-top {
-        padding: 20px 30px !important;
+        height: auto !important;
+        background-color: #0f1115 !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+        padding: 15px 25px !important;
+    }
+
+    .mil-frame .mil-frame-top .mil-logo {
+        color: #fff !important;
+    }
+
+    .mil-frame .mil-frame-bottom {
+        display: none !important;
+    }
+
+    .mil-wrapper,
+    .mil-content {
         background-color: transparent !important;
-        border-bottom: none !important;
     }
 }
 
@@ -420,11 +429,7 @@ input[type="password"]:focus {
     }
 
     .mil-banner-content {
-        padding-top: 8vh !important;
-    }
-
-    .mil-frame-top {
-        padding: 15px 20px !important;
+        padding-top: 2vh !important;
     }
 
     .mil-logo {
@@ -455,7 +460,7 @@ input[type="password"]:focus {
     }
 
     .mil-banner-content {
-        padding-top: 5vh !important;
+        padding-top: 1vh !important;
         text-align: center;
     }
 
@@ -468,27 +473,17 @@ input[type="password"]:focus {
         margin-bottom: 20px !important;
     }
 
-    .mil-wrapper,
-    .mil-content {
-        background-color: transparent !important;
-    }
-
-    .mil-content {
-        padding-top: 160px !important;
-    }
-
     .mil-frame .mil-frame-top {
-        padding: 20px !important;
-        background-color: rgba(15, 17, 21, 0.9) !important;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-        backdrop-filter: blur(10px) !important;
-        -webkit-backdrop-filter: blur(10px) !important;
-        height: auto !important;
+        padding: 15px !important;
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 5px;
     }
 
     .mil-menu-btn {
         font-size: 11px !important;
         line-height: 1.4 !important;
+        text-align: left !important;
     }
 
     .auth-card {
@@ -497,16 +492,6 @@ input[type="password"]:focus {
 
     .mil-modal-content {
         padding: 25px !important;
-    }
-
-    .mil-frame-top {
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 5px;
-    }
-
-    .mil-menu-btn {
-        text-align: left !important;
     }
 
     .dashboard-section {
