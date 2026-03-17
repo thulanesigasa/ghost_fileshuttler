@@ -421,15 +421,23 @@ input[type="password"]:focus {
     }
 }
 
-/* Tablets (up to 768px) */
+/* Tablets & Phones (up to 768px) */
 @media (max-width: 768px) {
+    .mil-frame {
+        display: none !important;
+    }
+
+    .mil-banner {
+        padding-top: 40px !important;
+    }
+
     .dashboard-section {
         grid-template-columns: 1fr;
         gap: 1.5rem;
     }
 
     .mil-banner-content {
-        padding-top: 2vh !important;
+        padding-top: 8vh !important;
     }
 
     .mil-logo {
@@ -447,14 +455,6 @@ input[type="password"]:focus {
 
 /* Mobile Devices (up to 480px) */
 @media (max-width: 480px) {
-    .mil-frame {
-        display: none !important;
-    }
-
-    .mil-banner {
-        padding-top: 40px !important;
-    }
-
     .app-container {
         padding: 1rem;
     }
