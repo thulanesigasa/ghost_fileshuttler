@@ -54,17 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (dropZone) {
 
         // --- Browser Back Button Logout Logic ---
-        // 1. If we are in the vault, push a state so the back button is available.
-        if (window.location.hash !== '#vault') {
-            history.pushState(null, '', window.location.pathname + '#vault');
-        }
+        // Push two states: a "base" landing pad and the #vault state.
+        // When user clicks back, they land on the base state (triggering logout),
+        // instead of exiting the website entirely.
+        history.pushState({ page: 'base' }, '', window.location.pathname);
+        history.pushState({ page: 'vault' }, '', window.location.pathname + '#vault');
 
-        // 2. Listen for the back button (popstate). If they leave the #vault hash, log them out.
         window.addEventListener('popstate', async (event) => {
-            if (window.location.hash !== '#vault') {
-                await fetch('/logout', { method: 'POST' });
-                window.location.reload();
-            }
+            // User pressed back - log them out and go to PIN screen
+            await fetch('/logout', { method: 'POST' });
+            window.location.replace(window.location.pathname);
         });
         // ----------------------------------------
 
