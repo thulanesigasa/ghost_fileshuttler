@@ -451,6 +451,10 @@ input[type="password"]:focus {
         display: none !important;
     }
 
+    .mil-banner {
+        padding-top: 40px !important;
+    }
+
     .app-container {
         padding: 1rem;
     }
