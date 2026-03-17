@@ -468,6 +468,11 @@ input[type="password"]:focus {
         margin-bottom: 20px !important;
     }
 
+    .mil-wrapper,
+    .mil-content {
+        background-color: transparent !important;
+    }
+
     .mil-content {
         padding-top: 100px !important;
     }
