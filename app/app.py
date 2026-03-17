@@ -1,5 +1,7 @@
 import os
 import socket
+import hashlib
+import uuid
 from builtins import Exception, ValueError, print
 from flask import Flask, render_template, request, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
@@ -19,22 +21,27 @@ db = SQLAlchemy(app)
 VAULT_DIR = os.path.abspath(os.path.join(app.root_path, 'shuttle_vault'))
 os.makedirs(VAULT_DIR, exist_ok=True)
 
-# Ghost Key Configuration (PIN)
-GHOST_PIN = os.environ.get('GHOST_PIN', '1234')  # Hardcoded default for demo
-
 class FileMetadata(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    vault_id = db.Column(db.String(64), nullable=False) # Hashed PIN for tenant isolation
     filename = db.Column(db.String(255), nullable=False)
     filepath = db.Column(db.String(512), nullable=False)
     uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
 
 with app.app_context():
-    db.create_all()
+    try:
+        db.create_all()
+        # Verify schema hasn't changed by attempting a read
+        FileMetadata.query.first()
+    except Exception as e:
+        print("Schema altered, recreating database tables...")
+        db.drop_all()
+        db.create_all()
 
 def login_required(f):
     @functools.wraps(f)
     def decorated_function(*args, **kwargs):
-        if not session.get('authenticated'):
+        if not session.get('authenticated') or not session.get('vault_id'):
             return jsonify({'error': 'Unauthorized. Ghost Key required.'}), 401
         return f(*args, **kwargs)
     return decorated_function
@@ -61,18 +68,21 @@ def index():
 @app.route('/auth', methods=['POST'])
 def authenticate():
     data = request.get_json()
-    if not data or 'pin' not in data:
-        return jsonify({'error': 'PIN is required'}), 400
+    if not data or 'pin' not in data or not data['pin'].strip():
+        return jsonify({'error': 'Ghost Key (PIN) is required'}), 400
     
-    if data['pin'] == GHOST_PIN:
-        session['authenticated'] = True
-        return jsonify({'message': 'Access Granted'})
-    else:
-        return jsonify({'error': 'Invalid Ghost Key'}), 401
+    # Accept any PIN, but use its hash to separate user vaults
+    user_pin = data['pin'].strip()
+    vault_hash = hashlib.sha256(user_pin.encode()).hexdigest()
+    
+    session['authenticated'] = True
+    session['vault_id'] = vault_hash
+    return jsonify({'message': 'Access Granted to secure vault'})
 
 @app.route('/logout', methods=['POST'])
 def logout():
     session.pop('authenticated', None)
+    session.pop('vault_id', None)
     return jsonify({'message': 'Logged out'})
 
 @app.route('/upload', methods=['POST'])
@@ -85,46 +95,51 @@ def upload_file():
         return jsonify({'error': 'No selected file'}), 400
     
     if file:
+        vault_id = session.get('vault_id')
         filename = secure_filename(file.filename)
-        filepath = os.path.join(VAULT_DIR, filename)
+        # Ensure unique filepath across different vaults saving the same filename
+        unique_id = uuid.uuid4().hex[:12]
+        safe_filename = f"{unique_id}_{filename}"
+        filepath = os.path.join(VAULT_DIR, safe_filename)
         
         try:
-            # Atomic transaction using SQLAlchemy
             file.save(filepath)
-            metadata = FileMetadata(filename=filename, filepath=filepath)
+            metadata = FileMetadata(vault_id=vault_id, filename=filename, filepath=filepath)
             db.session.add(metadata)
             db.session.commit()
             return jsonify({'message': 'File uploaded successfully', 'filename': filename})
         except Exception as e:
             db.session.rollback()
-            # Clean up partial file if DB fails
             if os.path.exists(filepath):
                 os.remove(filepath)
             print(f"Upload error: {e}")
-            return jsonify({'error': 'Database transaction failed: File removed.'}), 500
+            return jsonify({'error': 'Upload failed due to a server error.'}), 500
 
 @app.route('/files', methods=['GET'])
 @login_required
 def list_files():
-    files = FileMetadata.query.order_by(FileMetadata.uploaded_at.desc()).all()
+    vault_id = session.get('vault_id')
+    files = FileMetadata.query.filter_by(vault_id=vault_id).order_by(FileMetadata.uploaded_at.desc()).all()
     file_list = [{'id': f.id, 'filename': f.filename, 'uploaded_at': f.uploaded_at.isoformat()} for f in files]
     return jsonify(file_list)
 
 @app.route('/download/<int:file_id>', methods=['GET'])
 @login_required
 def download_file(file_id):
-    file_meta = FileMetadata.query.get(file_id)
+    vault_id = session.get('vault_id')
+    file_meta = FileMetadata.query.filter_by(id=file_id, vault_id=vault_id).first()
     if not file_meta:
-        return jsonify({'error': 'File not found'}), 404
+        return jsonify({'error': 'File not found or unauthorized'}), 404
     
-    return send_from_directory(VAULT_DIR, file_meta.filename, as_attachment=True)
+    return send_from_directory(VAULT_DIR, os.path.basename(file_meta.filepath), as_attachment=True, download_name=file_meta.filename)
 
 @app.route('/delete/<int:file_id>', methods=['POST', 'DELETE'])
 @login_required
 def delete_file(file_id):
-    file_meta = FileMetadata.query.get(file_id)
+    vault_id = session.get('vault_id')
+    file_meta = FileMetadata.query.filter_by(id=file_id, vault_id=vault_id).first()
     if not file_meta:
-        return jsonify({'error': 'File not found'}), 404
+        return jsonify({'error': 'File not found or unauthorized'}), 404
     
     try:
         if os.path.exists(file_meta.filepath):
