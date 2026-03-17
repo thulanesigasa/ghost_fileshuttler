@@ -1,4 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Force clear hash and scroll to top to prevent unwanted jumps
+    if (window.location.hash) {
+        history.replaceState("", document.title, window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
 
     // Elements
     const authForm = document.getElementById('auth-form');
