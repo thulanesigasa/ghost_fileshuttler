@@ -44,11 +44,14 @@ services:
     volumes:
       - ./nginx/certs/cert.crt:/etc/nginx/conf/server.crt:ro
       - ./nginx/certs/cert.key:/etc/nginx/conf/server.key:ro
+      - ./nginx/nginx.conf:/etc/nginx/templates/default.conf.template:ro
     environment:
       - BACKEND=http://web:5000
+      - PROXY_LOCATION=http://web:5000
       - SERVER_NAME=localhost
       - PORT=8080
       - SSL_PORT=8443
+      - SECURITY_INI=SecRequestBodyLimit=524288000;SecRequestBodyNoFilesLimit=5242880
     networks:
       - shuttler_network
     depends_on:

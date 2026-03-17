@@ -53,20 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dashboard Logic
     if (dropZone) {
 
-        // --- Browser Back Button Logout Logic ---
-        // Push two states: a "base" landing pad and the #vault state.
-        // When user clicks back, they land on the base state (triggering logout),
-        // instead of exiting the website entirely.
-        history.pushState({ page: 'base' }, '', window.location.pathname);
-        history.pushState({ page: 'vault' }, '', window.location.pathname + '#vault');
-
-        window.addEventListener('popstate', async (event) => {
-            // User pressed back - log them out and go to PIN screen
-            await fetch('/logout', { method: 'POST' });
-            window.location.replace(window.location.pathname);
-        });
-        // ----------------------------------------
-
         loadFiles();
 
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -154,6 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function loadFiles() {
         if (!fileList) return;
+        if (document.hidden) return; // Stop polling when tab is hidden
 
         try {
             const response = await fetch('/files');
@@ -272,6 +259,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Automatic Sync (Polling)
     // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
     if (fileList) {
-        setInterval(loadFiles, 1000);
+        setInterval(loadFiles, 3000);
     }
 });

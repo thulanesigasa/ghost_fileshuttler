@@ -28,12 +28,26 @@ The easiest way to get Ghost_FileShuttler running is using Docker.
 
 2. **Launch the Ghost Node:**
    ```bash
-   docker-compose up -d --build
+   docker compose up -d --build
    ```
 
 3. **Access the App:**
-   - **Local:** `https://localhost:8443`
-   - **Network:** Check the app header for your `LAN_IP` (e.g., `https://192.168.1.100:8443`)
+   - **Local Desktop:** Open `https://localhost:8443`
+   - **LAN / Mobile:** Locate your `LAN_IP` in the app terminal or the header (e.g., `https://192.168.34.48:8443`).
+
+---
+
+## 📱 Mobile Access Guide
+
+To run and access Ghost_FileShuttler on your mobile device:
+
+1. **Connect to the same Network:** Ensure your phone/tablet is connected to the same Wi-Fi as the host machine.
+2. **Find the LAN IP:** Look at the top-right corner of the Ghost_FS desktop header to find your `LAN_IP`.
+3. **Open Browser:** On your mobile device, enter the URL: `https://<YOUR_LAN_IP>:8443` (e.g., `https://192.168.34.48:8443`).
+4. **SSL Warning:** Since Ghost uses a self-signed certificate for local encryption, your browser will show a "Your connection is not private" warning. 
+   - Click **Advanced**.
+   - Select **Proceed to <IP> (unsafe)** to enter the vault.
+5. **Pin Access:** Enter your `GHOST_PIN` to unlock the vault from your mobile.
 
 ---
 

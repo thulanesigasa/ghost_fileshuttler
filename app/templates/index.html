@@ -33,14 +33,51 @@
     <!-- wrapper -->
     <div class="mil-wrapper" id="top">
 
+        <!-- menu -->
+        <div class="mil-menu-frame">
+            <div class="mil-frame-top">
+                <a href="/" class="mil-logo">Ghost_FS</a>
+                <div class="mil-menu-btn">
+                    <span></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="mil-menu-content">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <nav class="mil-main-menu" id="swupMenu">
+                                <ul>
+                                    <li class="mil-active">
+                                        <a href="#top" data-no-swup>Vault</a>
+                                    </li>
+                                    <li>
+                                        <a href="#about" data-no-swup>About</a>
+                                    </li>
+                                    <li>
+                                        <a href="#services" data-no-swup>Services</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- menu end -->
+
         <!-- frame -->
         <div class="mil-frame">
             <div class="mil-frame-top">
                 <a href="/" class="mil-logo">Ghost_FS</a>
-                <div class="mil-menu-btn"
-                    style="color: var(--accent-1); font-size: 14px; font-weight: 600; text-align: right; line-height: 1.2;">
-                    NODE_ID: {{ host_ip }}<br>
-                    LAN_IP: {{ lan_ip }}
+                <div style="display: flex; align-items: center;">
+                    <div class="mil-frame-info mil-mobile-hidden"
+                        style="color: var(--accent-1); font-size: 14px; font-weight: 600; text-align: right; line-height: 1.2; margin-right: 30px;">
+                        NODE_ID: {{ host_ip }}<br>
+                        LAN_IP: {{ lan_ip }}
+                    </div>
+                    <div class="mil-menu-btn">
+                        <span></span>
+                    </div>
                 </div>
             </div>
             <div class="mil-frame-bottom">
@@ -377,7 +414,7 @@
     <script src="{{ url_for('static', filename='js/plugins/fancybox.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/plugins/gsap.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/plugins/ScrollTrigger.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/plugins/ScrollToPlugin.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/ScrollTo.min.js') }}"></script>
     <script src="{{ url_for('static', filename='js/plugins/swup.min.js') }}"></script>
     <!-- Template main js (for animations) -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
