@@ -387,6 +387,14 @@ input[type="password"]:focus {
 
 /* Responsive Overrides */
 
+/* Large Tablets & Laptops (up to 1200px) */
+@media (max-width: 1200px) {
+    .mil-frame .mil-frame-top {
+        background-color: transparent !important;
+        border-bottom: none !important;
+    }
+}
+
 /* Large Tablets & Laptops (up to 1024px) */
 @media (max-width: 1024px) {
     .app-container {
@@ -397,8 +405,10 @@ input[type="password"]:focus {
         padding-top: 10vh !important;
     }
 
-    .mil-frame-top {
+    .mil-frame .mil-frame-top {
         padding: 20px 30px !important;
+        background-color: transparent !important;
+        border-bottom: none !important;
     }
 }
 
@@ -462,11 +472,13 @@ input[type="password"]:focus {
         padding-top: 100px !important;
     }
 
-    .mil-frame-top {
+    .mil-frame .mil-frame-top {
         padding: 20px !important;
-        background: rgba(0, 0, 0, 0.8) !important;
+        background-color: rgba(15, 17, 21, 0.9) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
+        height: auto !important;
     }
 
     .mil-menu-btn {
