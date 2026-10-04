@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost_FileShuttler</title>
+    <!-- Portfolio Template CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/bootstrap-grid.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/swiper.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/plugins/fancybox.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Original CSS Overrides for Dropzone -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "Ghost_FileShuttler",
+      "operatingSystem": "Cross-Platform",
+      "applicationCategory": "File Sharing Application",
+      "description": "A secure local-network file-sharing system designed for speed and simplicity.",
+      "isAccessibleForFree": true
+    }
+    </script>
+</head>
+
+<body class="mil-dark-bg" style="background-color: #000000;">
+
+    <!-- wrapper -->
+    <div class="mil-wrapper" id="top">
+
+        <!-- menu -->
+        <div class="mil-menu-frame">
+            <div class="mil-frame-top">
+                <a href="/" class="mil-logo">Ghost_FS</a>
+                <div class="mil-menu-btn">
+                    <span></span>
+                </div>
+            </div>
+            <div class="container">
+                <div class="mil-menu-content">
+                    <div class="row">
+                        <div class="col-lg-5">
+                            <nav class="mil-main-menu" id="swupMenu">
+                                <ul>
+                                    <li class="mil-active">
+                                        <a href="#top" data-no-swup>Vault</a>
+                                    </li>
+                                    <li>
+                                        <a href="#about" data-no-swup>About</a>
+                                    </li>
+                                    <li>
+                                        <a href="#services" data-no-swup>Services</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- menu end -->
+
+        <!-- frame -->
+        <div class="mil-frame">
+            <div class="mil-frame-top">
+                <a href="/" class="mil-logo">Ghost_FS</a>
+                <div style="display: flex; align-items: center;">
+                    <div class="mil-frame-info mil-mobile-hidden"
+                        style="color: var(--accent-1); font-size: 14px; font-weight: 600; text-align: right; line-height: 1.2; margin-right: 30px;">
+                        NODE_ID: {{ host_ip }}<br>
+                        LAN_IP: {{ lan_ip }}
+                    </div>
+                    <div class="mil-menu-btn">
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="mil-frame-bottom">
+                <div class="mil-current-page">{% if not is_auth %}AUTH{% else %}VAULT{% endif %}</div>
+                <div class="mil-back-to-top">
+                    {% if is_auth %}
+                    <a href="javascript:void(0)" id="logout-btn" class="mil-link mil-dark mil-arrow-place">
+                        <span>Lock Vault</span>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <!-- frame end -->
+
+        <!-- content -->
+        <div class="mil-content">
+            <div id="swupMain" class="mil-main-transition">
+
+                <!-- banner -->
+                <section class="mil-banner mil-dark-bg">
+                    <div class="mi-invert-fix">
+                        <div class="container">
+
+                            {% if not is_auth %}
+                            <div class="mil-banner-content mil-up"
+                                style="max-width: 500px; margin: 0 auto; padding-top: 15vh;">
+                                <h1 class="mil-muted mil-mb-60">Vault <span class="mil-thin">Access</span></h1>
+                                <p class="mil-light-soft mil-mb-60">Enter the Ghost Key to view and transfer Amapiano
+                                    stems securely across your local network.</p>
+
+                                <form id="auth-form" style="text-align: center;">
+                                    <input type="password" id="pin-input" placeholder="Enter PIN" inputmode="numeric"
+                                        required
+                                        style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 30px; margin-bottom: 2rem;">
+                                    <button type="submit" class="mil-button"
+                                        style="padding: 0 40px; justify-content: center; height: 50px; display: inline-flex; width: auto; margin: 0 auto;">
+                                        <span>Unlock Vault</span>
+                                    </button>
+                                </form>
+                                <div id="auth-error" class="error-msg" style="color: #ff4a4a; margin-top: 20px;"></div>
+                            </div>
+                            {% else %}
+                            <div class="row mil-p-120-120 dashboard-section">
+                                <div class="col-lg-6 mil-mb-60">
+                                    <h2 class="mil-muted mil-mb-30">Shuttle <span class="mil-thin">Terminal</span></h2>
+                                    <p class="mil-light-soft mil-mb-60">Upload new files natively to the secure vault
+                                        via drag and drop.</p>
+
+                                    <!-- Dropzone -->
+                                    <div class="drop-zone" id="drop-zone"
+                                        style="border: 2px dashed rgba(255,255,255,0.2); padding: 50px; border-radius: 20px; text-align: center; cursor: pointer;">
+                                        <div class="drop-icon mil-mb-30">
+                                            <i class="fas fa-cloud-upload-alt fa-3x"
+                                                style="color: var(--accent-1);"></i>
+                                        </div>
+                                        <h5 class="mil-muted mil-mb-15">Drag & Drop files here</h5>
+                                        <p class="mil-light-soft">or</p>
+                                        <label for="file-upload" class="mil-button mt-3"
+                                            style="margin-top:20px; padding: 0 40px; justify-content: center; height: 50px;">
+                                            <span>Browse</span>
+                                        </label>
+                                        <input type="file" id="file-upload" hidden>
+                                    </div>
+
+                                    <div id="upload-progress" class="progress-bar-container hidden"
+                                        style="margin-top: 20px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
+                                        <div class="progress-bar" id="progress-bar"
+                                            style="height: 100%; width: 0%; background: var(--accent-1); transition: width 0.3s;">
+                                        </div>
+                                    </div>
+                                    <div id="upload-status" class="status-msg"
+                                        style="margin-top: 15px; color: var(--accent-1);"></div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <h2 class="mil-muted mil-mb-30">Secure <span class="mil-thin">Vault</span></h2>
+                                    <p class="mil-light-soft mil-mb-60">Retrieve stems hosted locally on the Ghost_FS
+                                        node.</p>
+
+                                    <div class="file-list-container"
+                                        style="max-height: 500px; overflow-y: auto; padding-right: 20px;">
+                                        <ul id="file-list" style="list-style: none; padding: 0;">
+                                            <li class="mil-muted">Fetching secured files...</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                    <!-- banner end -->
+
+                    {% if not is_auth %}
+                    <!-- about -->
+                    <section id="about" class="mil-dark-bg">
+                        <div class="container mil-p-120-30">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-lg-6 col-xl-5">
+
+                                    <div class="mil-mb-90">
+                                        <h2 class="mil-up mil-mb-60">Learn About <br><span
+                                                class="mil-thin">Ghost_FileShuttler</span></h2>
+                                        <p class="mil-up mil-mb-30">Ghost_FileShuttler is a dynamic, localized file
+                                            delivery protocol driven by
+                                            a shared commitment to transforming innovative ideas into impactful
+                                            solutions. Our
+                                            system ensures lightning-fast local transfers and extreme containerized
+                                            security.</p>
+
+                                        <p class="mil-up mil-mb-60">Privacy is the cornerstone of our approach. We
+                                            believe
+                                            that files traversing your LAN should never touch the cloud. By leveraging
+                                            our
+                                            atomic database transactions and isolated network segments, we keep your
+                                            data secure.</p>
+
+                                        <div class="mil-about-quote">
+                                            <div class="mil-avatar mil-up">
+                                                <img src="{{ url_for('static', filename='img/faces/1.png') }}"
+                                                    alt="Founder">
+                                            </div>
+                                            <h6 class="mil-quote mil-up">Innovating with Purpose: <span
+                                                    class="mil-thin">Delivering Exceptional</span> Secure Solutions</h6>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-5">
+
+                                    <div class="mil-about-photo mil-mb-90">
+                                        <div class="mil-lines-place"></div>
+                                        <div class="mil-up mil-img-frame" style="padding-bottom: 160%;">
+                                            <img src="{{ url_for('static', filename='img/photo/12.png') }}" alt="img"
+                                                class="mil-scale" data-value-1="1" data-value-2="1.2">
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- about end -->
+
+                    <!-- services -->
+                    <section class="mil-dark-bg">
+                        <div class="mi-invert-fix">
+                            <div class="mil-animation-frame">
+                                <div class="mil-animation mil-position-1 mil-scale" data-value-1="2.4"
+                                    data-value-2="1.4" style="top: 300px; right: -100px"></div>
+                                <div class="mil-animation mil-position-2 mil-scale" data-value-1="2" data-value-2="1"
+                                    style="left: 150px"></div>
+                            </div>
+                            <div class="container mil-p-120-0">
+
+                                <div class="mil-mb-120">
+                                    <div class="row">
+                                        <div class="col-lg-10">
+                                            <span
+                                                class="mil-suptitle mil-light-soft mil-suptitle-right mil-up">Dedicated
+                                                Protocol Driving Your Local<br> Network Speed</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mil-complex-text justify-content-center mil-up mil-mb-15">
+                                        <span class="mil-text-image"><img
+                                                src="{{ url_for('static', filename='img/photo/2.png') }}"
+                                                alt="team"></span>
+                                        <h2 class="mil-h1 mil-muted mil-center">Secure <span
+                                                class="mil-thin">Transfers</span></h2>
+                                    </div>
+                                    <div class="mil-complex-text justify-content-center mil-up">
+                                        <h2 class="mil-h1 mil-muted mil-center">For Your <span
+                                                class="mil-thin">Workspace.</span></h2>
+                                    </div>
+                                </div>
+
+                                <div class="row mil-services-grid m-0">
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Encrypted<br>Transmission</h5>
+                                            <p class="mil-light-soft mil-mb-30">We craft secure protocols that capture
+                                                your files securely on your network. All files flow through HTTPS and
+                                                are protected from outside access.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Amapiano<br>Stem Focus</h5>
+                                            <p class="mil-light-soft mil-mb-30">Optimized for large audio stems,
+                                                FileShuttler streams your content in real-time, completely bypassing the
+                                                internet overhead.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Ghost Key<br>Authentication</h5>
+                                            <p class="mil-light-soft mil-mb-30">Use synchronized PIN authentication
+                                                backed by PostgreSQL to instantly share access to temporary local
+                                                endpoints securely.</p>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 col-lg-3 mil-services-grid-item p-0">
+                                        <a href="#" class="mil-service-card-sm mil-up">
+                                            <h5 class="mil-muted mil-mb-30">Edge<br>Protection</h5>
+                                            <p class="mil-light-soft mil-mb-30">The ModSecurity Web Application Firewall
+                                                acts as a shield against advanced local network threats such as SQL
+                                                injection protocols.</p>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- services end -->
+
+                    <!-- team -->
+                    <section class="mil-dark-bg">
+                        <div class="container mil-p-120-30">
+                            <div class="row justify-content-between align-items-center">
+                                <div class="col-lg-5 col-xl-4">
+
+                                    <div class="mil-mb-90">
+                                        <h2 class="mil-up mil-mb-60">Meet Our <br><span
+                                                class="mil-thin">Engineers</span></h2>
+                                        <p class="mil-up mil-mb-30">We are a team of decentralized security researchers
+                                            passionate about local-first data privacy. Our backgrounds span low-level
+                                            networking and high-level UX design.</p>
+                                        <h4 class="mil-up mil-mb-60">Securing your stems, <br>one packet at a time.</h4>
+                                    </div>
+
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="mil-team-list">
+                                        <div class="row mil-mb-60">
+                                            <div class="col-sm-6">
+                                                <div class="mil-team-card mil-up mil-mb-30"
+                                                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;">
+                                                    <img src="{{ url_for('static', filename='img/faces/8.png') }}"
+                                                        alt="Lead" style="width: 100%; border-radius: 15px;">
+                                                    <div class="mil-description mil-mt-20">
+                                                        <h5 class="mil-muted mil-mb-5">Ghost Protocol</h5>
+                                                        <p class="mil-link mil-light-soft">Core Developer</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="mil-team-card mil-up mil-mb-30"
+                                                    style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 20px;">
+                                                    <img src="{{ url_for('static', filename='img/faces/10.png') }}"
+                                                        alt="Dev" style="width: 100%; border-radius: 15px;">
+                                                    <div class="mil-description mil-mt-20">
+                                                        <h5 class="mil-muted mil-mb-5">Shuttle Node</h5>
+                                                        <p class="mil-link mil-light-soft">Network Architect</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- team end -->
+
+                    <!-- reviews -->
+                    <section class="mil-dark-bg mil-p-120-120" style="background: #050505;">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-10">
+                                    <span class="mil-suptitle mil-suptitle-right mil-light-soft mil-up">Network
+                                        performance is <br>the heartbeat of shared creativity.</span>
+                                </div>
+                            </div>
+
+                            <h2 class="mil-center mil-up mil-mb-60">Producer <span class="mil-thin">Voices:</span>
+                                <br>Why They Use <span class="mil-thin">Ghost_FS</span>
+                            </h2>
+
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <div class="mil-review-item mil-center mil-up">
+                                        <p class="mil-text-xl mil-light-soft mil-mb-60">"The latency on my LAN is
+                                            sub-millisecond. Sending Amapiano stems between my Windows Studio and Kali
+                                            Linux sandbox has never been this seamless. Pure ghost speed."</p>
+                                        <div class="mil-avatar mil-mb-30" style="width: 80px; margin: 0 auto;">
+                                            <img src="{{ url_for('static', filename='img/faces/1.png') }}"
+                                                alt="Producer" style="width: 100%; border-radius: 50%;">
+                                        </div>
+                                        <h5 class="mil-muted">Amapiano Legend</h5>
+                                        <p class="mil-link mil-light-soft">verified node user</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- reviews end -->
+
+                    {% endif %}
+
+            </div>
+        </div>
+        <!-- content end -->
+    </div>
+
+    <!-- Themed Modal -->
+    <div id="ghost-modal" class="mil-modal-wrapper hidden">
+        <div class="mil-modal-content">
+            <div class="mil-modal-icon mil-mb-30">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z"
+                        fill="currentColor" />
+                </svg>
+            </div>
+            <h3 class="mil-muted mil-mb-20">Confirm Deletion</h3>
+            <p class="mil-light-soft mil-mb-40" id="modal-message">Are you sure you want to permanently remove this file
+                from the Ghost Vault?</p>
+            <div class="mil-modal-actions">
+                <button id="modal-cancel" class="mil-button mil-icon-button-sm mil-modal-btn-alt">
+                    <span id="modal-cancel-text">Cancel</span>
+                </button>
+                <button id="modal-confirm" class="mil-button mil-icon-button-sm mil-modal-btn-main">
+                    <span id="modal-confirm-text">Delete</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/plugins/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/swiper.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/fancybox.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/gsap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/ScrollTrigger.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/ScrollTo.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/plugins/swup.min.js') }}"></script>
+    <!-- Template main js (for animations) -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <!-- Our app logic -->
+    <script src="{{ url_for('static', filename='js/shuttler.js') }}"></script>
+
+</body>
+
+</html>

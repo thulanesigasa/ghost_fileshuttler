@@ -1,0 +1,7 @@
+User-agent: *
+Disallow: /vault/
+Disallow: /auth
+Disallow: /upload
+Allow: /
+
+Sitemap: https://localhost:8443/sitemap.xml
