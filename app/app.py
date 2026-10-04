@@ -12,8 +12,9 @@ app = Flask(__name__)
 # In production, use a strong random secret key.
 app.secret_key = os.environ.get('SECRET_KEY', 'ghost_super_secret_key')
 
-# Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'postgresql://shuttler:ghostpass@db:5432/shuttlerdb')
+# Database Configuration: default to local SQLite for native dev, or use DATABASE_URL (e.g. Postgres in Docker)
+default_db_path = os.path.abspath(os.path.join(app.root_path, 'shuttler.db'))
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', f'sqlite:///{default_db_path}')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
