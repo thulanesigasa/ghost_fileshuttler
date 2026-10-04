@@ -1,0 +1,269 @@
+document.addEventListener('DOMContentLoaded', () => {
+    // Force clear hash and scroll to top to prevent unwanted jumps
+    if (window.location.hash) {
+        history.replaceState("", document.title, window.location.pathname + window.location.search);
+    }
+    window.scrollTo(0, 0);
+
+    // Elements
+    const authForm = document.getElementById('auth-form');
+    const pinInput = document.getElementById('pin-input');
+    const authError = document.getElementById('auth-error');
+    const logoutBtn = document.getElementById('logout-btn');
+
+    const dropZone = document.getElementById('drop-zone');
+    const fileUpload = document.getElementById('file-upload');
+    const progressBarContainer = document.getElementById('upload-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const uploadStatus = document.getElementById('upload-status');
+    const fileList = document.getElementById('file-list');
+
+    // Authentication Logic
+    if (authForm) {
+        authForm.addEventListener('submit', async (e) => {
+            e.submitter?.setAttribute('disabled', true);
+            e.preventDefault();
+            const pin = pinInput.value;
+
+            try {
+                const response = await fetch('/auth', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pin })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    window.location.reload();
+                } else {
+                    authError.textContent = data.error || 'Authentication failed';
+                    pinInput.value = '';
+                }
+            } catch (err) {
+                authError.textContent = 'Network error occurred';
+            } finally {
+                e.submitter?.removeAttribute('disabled');
+            }
+        });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await fetch('/logout', { method: 'POST' });
+            window.location.reload();
+        });
+    }
+
+    // Dashboard Logic
+    if (dropZone) {
+
+        loadFiles();
+
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, () => {
+                dropZone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length > 0) {
+                handleUpload(files[0]);
+            }
+        });
+
+        fileUpload.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                handleUpload(this.files[0]);
+            }
+        });
+    }
+
+    function handleUpload(file) {
+        uploadStatus.className = 'status-msg';
+        uploadStatus.textContent = 'Initiating upload...';
+        progressBarContainer.classList.remove('hidden');
+        progressBar.style.width = '0%';
+
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload', true);
+
+        xhr.upload.onprogress = function (e) {
+            if (e.lengthComputable) {
+                const percentComplete = (e.loaded / e.total) * 100;
+                progressBar.style.width = percentComplete + '%';
+            }
+        };
+
+        xhr.onload = function () {
+            if (xhr.status === 200) {
+                uploadStatus.textContent = 'Upload complete!';
+                uploadStatus.classList.add('success');
+                setTimeout(() => {
+                    progressBarContainer.classList.add('hidden');
+                    uploadStatus.textContent = '';
+                }, 3000);
+                loadFiles(); // Refresh file list
+            } else {
+                let errorMsg = 'Upload failed';
+                try {
+                    const response = JSON.parse(xhr.responseText);
+                    if (response.error) errorMsg = response.error;
+                } catch (e) { }
+                uploadStatus.textContent = errorMsg;
+                uploadStatus.style.color = 'var(--error)';
+            }
+        };
+
+        xhr.onerror = function () {
+            uploadStatus.textContent = 'Network Error during upload';
+            uploadStatus.style.color = 'var(--error)';
+        };
+
+        xhr.send(formData);
+    }
+
+    async function loadFiles() {
+        if (!fileList) return;
+        if (document.hidden) return; // Stop polling when tab is hidden
+
+        try {
+            const response = await fetch('/files');
+            if (response.status === 401) return;
+
+            const data = await response.json();
+            const currentJSON = JSON.stringify(data);
+
+            // Flicker prevention: Only re-render if the file list has changed
+            if (window.lastFilesJSON === currentJSON) return;
+            window.lastFilesJSON = currentJSON;
+
+            fileList.innerHTML = '';
+
+            if (data.length === 0) {
+                fileList.innerHTML = '<li style="justify-content: center; color: var(--text-muted); padding: 1rem; border: dashed 1px rgba(255,255,255,0.2);">Vault is currently empty</li>';
+                return;
+            }
+
+            data.forEach(file => {
+                const d = new Date(file.uploaded_at);
+                const dateStr = `${d.toLocaleDateString()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+
+                const li = document.createElement('li');
+                li.style.cssText = 'display:flex; justify-content:space-between; align-items:center; border: 1px solid rgba(255,255,255,0.1); padding: 1rem; margin-bottom: 1rem; border-radius: 12px;';
+                li.innerHTML = `
+                    <div class="file-info" style="flex-grow: 1;">
+                        <span class="file-name mil-bold" title="${file.filename}">${file.filename}</span><br/>
+                        <span class="file-date mil-muted mil-text-sm">${dateStr}</span>
+                    </div>
+                    <div class="file-actions" style="display: flex; gap: 10px;">
+                        <a href="/download/${file.id}" class="mil-button mil-icon-button-sm mil-arrow-place" title="Download">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5 20H19V18H5V20ZM19 9H15V3H9V9H5L12 16L19 9Z" fill="currentColor"/>
+                            </svg>
+                        </a>
+                        <button onclick="deleteFile(${file.id}, '${file.filename}')" class="mil-button mil-icon-button-sm" style="background: rgba(255, 74, 74, 0.1); color: #ff4a4a; border: 1px solid rgba(255, 74, 74, 0.2);" title="Delete">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+                fileList.appendChild(li);
+            });
+        } catch (err) {
+            console.error('Ghost_FS Sync Error:', err);
+        }
+    }
+
+    // Modal Elements
+    const ghostModal = document.getElementById('ghost-modal');
+    const modalMessage = document.getElementById('modal-message');
+    const modalConfirm = document.getElementById('modal-confirm');
+    const modalCancel = document.getElementById('modal-cancel');
+    const modalConfirmText = document.getElementById('modal-confirm-text');
+    const modalCancelText = document.getElementById('modal-cancel-text');
+
+    let modalAction = null;
+
+    // Themed Alert/Confirm Utility
+    window.ghostAlert = function (message, isConfirm = false, action = null) {
+        modalMessage.innerHTML = message;
+        modalAction = action;
+
+        if (isConfirm) {
+            modalCancel.classList.remove('hidden');
+            modalConfirmText.textContent = "Continue";
+            modalCancelText.textContent = "Cancel";
+        } else {
+            modalCancel.classList.add('hidden');
+            modalConfirmText.textContent = "Got it";
+        }
+
+        ghostModal.classList.remove('hidden');
+    };
+
+    // Deletion Logic
+    window.deleteFile = function (fileId, filename) {
+        ghostAlert(
+            `Are you sure you want to permanently remove <br><span class="mil-accent-1">"${filename}"</span> from the Ghost Vault?`,
+            true,
+            async () => {
+                try {
+                    const response = await fetch(`/delete/${fileId}`, {
+                        method: 'POST',
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    });
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        window.lastFilesJSON = "";
+                        loadFiles();
+                    } else {
+                        ghostAlert(data.error || 'Failed to delete file');
+                    }
+                } catch (err) {
+                    console.error('Deletion error:', err);
+                    ghostAlert('Network error during deletion. The Ghost Node might be unreachable.');
+                }
+            }
+        );
+    };
+
+    modalCancel.addEventListener('click', () => {
+        ghostModal.classList.add('hidden');
+        modalAction = null;
+    });
+
+    modalConfirm.addEventListener('click', () => {
+        ghostModal.classList.add('hidden');
+        if (modalAction) modalAction();
+        modalAction = null;
+    });
+
+    // Automatic Sync (Polling)
+    // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
+    if (fileList) {
+        setInterval(loadFiles, 3000);
+    }
+});

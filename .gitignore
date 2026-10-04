@@ -1,38 +1,34 @@
-# Next.js
-.next/
-out/
-build/
-dist/
-node_modules/
-
-# Environment files
-.env
-.env*.local
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Ghost Vault & Database files
-shuttle_vault/*
-!shuttle_vault/.gitkeep
-data/*
-!data/.gitkeep
-*.sqlite
-*.sqlite3
-*.db
-*.db-journal
-
-# Agent Workspace & Scratch (Mandatory Rule 22)
+# AI Agent Rules & Workspace Scratch (User Rule & Mandatory Rule 22)
 .agents/
 .agents
+AGENTS.md
+CLAUDE.md
 
-# Legacy Python & Virtual Environments
+# Python & Virtual Environments
 venv/
 .venv/
 __pycache__/
 *.py[cod]
 *$py.class
+
+# Environment files
+.env
+.env*.local
+
+# Ghost Vault & Database files
+shuttle_vault/*
+!shuttle_vault/.gitkeep
+data/
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Next.js / Node.js
+.next/
+node_modules/
+dist/
+build/
 
 # Certificates & Keys
 nginx/certs/

@@ -1,19 +1,27 @@
 # Ghost_FileShuttler
 
-![Framework](https://img.shields.io/badge/Framework-Next.js_16_(App_Router)-000000?style=for-the-badge&logo=next.js&logoColor=white)
-![Language](https://img.shields.io/badge/Language-TypeScript_5-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
-![Runtime](https://img.shields.io/badge/Runtime-Node.js_24-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![Database](https://img.shields.io/badge/Database-Embedded_SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
-![Theme](https://img.shields.io/badge/Theme-Ghost_Cyan_60--30--10-00c3cf?style=for-the-badge)
-![Security](https://img.shields.io/badge/Security-SHA--256_Tenant_Isolation-00ff9d?style=for-the-badge)
+![Framework](https://img.shields.io/badge/Framework-Flask_2.3-000000?style=for-the-badge&logo=flask&logoColor=white)
+![Proxy](https://img.shields.io/badge/Proxy-Nginx_OWASP_CRS-009639?style=for-the-badge&logo=nginx&logoColor=white)
+![Database](https://img.shields.io/badge/Database-PostgreSQL_15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Theme](https://img.shields.io/badge/Theme-Ghost_Cyan-00c3cf?style=for-the-badge)
+![Real-Time](https://img.shields.io/badge/Sync-1s_Polling-00ff9d?style=for-the-badge)
 
-A high-performance, ultra-secure, and lightning-fast local-network file-sharing system built as a full-stack Next.js application. Designed with a Ghost Cyan aesthetic adhering strictly to the 60-30-10 design system, it enables peer-to-peer file transfers between mobile devices, tablets, and desktops over your local Wi-Fi without ever routing data through external cloud servers.
+A production-ready, ultra-secure, and lightning-fast local-network file-sharing system. Designed with a premium Ghost Cyan aesthetic, it allows for seamless file transfers between devices (Mobile, Desktop, Tablet) without leaving your local network.
+
+---
+
+## Features
+
+- **Real-Time Sync:** Files appear across all connected nodes within 1 second without refreshing.
+- **Secure Vault:** Protected by PIN-based authentication with SHA-256 tenant isolation.
+- **Cross-Platform:** Fully responsive UI tailored for Mobile, Tablet, and Desktop.
+- **Themed Modals:** Custom-built Ghost dialogs for a premium user experience.
+- **Easy Management:** Upload, Download, and Permanently Delete files from any device.
+- **Privacy First:** Data never leaves your local network.
 
 ---
 
 ## Architecture Overview
-
-Ghost_FileShuttler operates entirely within the local area network (LAN) boundary. All transfers execute directly between client devices and the host machine over high-speed HTTP/1.1 and HTTP/2 local streams.
 
 ```
                       +---------------------------------------+
@@ -21,36 +29,30 @@ Ghost_FileShuttler operates entirely within the local area network (LAN) boundar
                       |   (Mobile / Tablet / Desktop Clients) |
                       +-------------------+-------------------+
                                           |
-                        HTTP (LAN_IP:3000 | localhost:3000)
+                      HTTPS (Port 8443) / HTTP (Port 8080)
                                           v
                       +---------------------------------------+
-                      |         Ghost_FS Next.js Server       |
-                      |  - App Router / React 19 / TypeScript |
-                      |  - Session Auth via HTTP-Only Cookies |
-                      |  - Real-Time Vault Polling Engine     |
+                      |         Nginx (OWASP ModSecurity)     |
+                      |      - SSL Termination (Certs)        |
+                      |      - Reverse Proxy to Flask:5000    |
+                      +-------------------+-------------------+
+                                          |
+                                          v
+                      +---------------------------------------+
+                      |             Flask Web Node            |
+                      |  - SQLAlchemy ORM & Auth Session      |
+                      |  - Multi-Tenant Vault Routing         |
                       +-------------------+-------------------+
                                           |
                        +------------------+------------------+
                        |                                     |
                        v                                     v
          +---------------------------+         +---------------------------+
-         |     node:sqlite DB        |         |    shuttle_vault/ Disk    |
-         |  - Hashed Vault Index     |         |  - Encrypted / Isolated   |
-         |  - File Metadata & Sizes  |         |  - Streaming Read/Write   |
-         |  - Upload Timestamps      |         |  - UUID Prefixed Storage  |
+         |      PostgreSQL DB        |         |    shuttle_vault/ Disk    |
+         |  - Vault IDs (Hashed PIN) |         |  - Direct File Storage    |
+         |  - File Metadata & Sizes  |         |  - UUID Prefixed Paths    |
          +---------------------------+         +---------------------------+
 ```
-
----
-
-## Features
-
-- ![Sync Badge](https://img.shields.io/badge/Sync-Real--Time_Polling-00c3cf?style=flat-square) **Real-Time Vault Sync:** Connected nodes synchronize vault contents every 1.5 seconds with zero-flicker JSON diffing.
-- ![Isolation Badge](https://img.shields.io/badge/Multi--Tenant-SHA--256_Hashed_PINs-00ff9d?style=flat-square) **Multi-Tenant Vault Isolation:** Every unique PIN provisions a dedicated partition. Users on the same LAN entering different PINs access completely segregated storage partitions.
-- ![Storage Badge](https://img.shields.io/badge/Storage-Zero_Cloud_Exposure-00c3cf?style=flat-square) **Local Subnet Privacy:** Binary files stream directly to and from the host disk. Telemetry, analytics, and external trackers are non-existent.
-- ![Design Badge](https://img.shields.io/badge/Design-60--30--10_Palette-00ff9d?style=flat-square) **Ghost Cyan Design System:** 60% Void Black background, 30% Obsidian Slate card surfaces, and 10% Ghost Cyan accent highlights.
-- ![SVG Badge](https://img.shields.io/badge/Icons-Pure_SVG_Vector-00c3cf?style=flat-square) **Pure Vector Graphics:** Clean SVG vectors for all actions, navigation, file indicators, and status prompts.
-- ![Modal Badge](https://img.shields.io/badge/Modals-Custom_Ghost_Dialogs-00ff9d?style=flat-square) **Themed Confirmation Modals:** Custom-engineered non-blocking dialogs for permanent file removal with keyboard Escape support.
 
 ---
 
@@ -58,115 +60,118 @@ Ghost_FileShuttler operates entirely within the local area network (LAN) boundar
 
 ```
 ghost_fileshuttler/
-|-- src/
-|   |-- app/
-|   |   |-- api/
-|   |   |   |-- auth/
-|   |   |   |   `-- route.ts          # PIN verification and session cookie issuer
-|   |   |   |-- delete/
-|   |   |   |   `-- [id]/
-|   |   |   |       `-- route.ts      # Multi-tenant verified file deletion handler
-|   |   |   |-- download/
-|   |   |   |   `-- [id]/
-|   |   |   |       `-- route.ts      # Streaming binary attachment downloader
-|   |   |   |-- files/
-|   |   |   |   `-- route.ts          # Vault file listing endpoint
-|   |   |   |-- logout/
-|   |   |   |   `-- route.ts          # Vault lock and cookie expiration handler
-|   |   |   |-- network/
-|   |   |   |   `-- route.ts          # Host Node ID and LAN IP discovery endpoint
-|   |   |   `-- upload/
-|   |   |       `-- route.ts          # Multipart file streaming upload handler
-|   |   |-- globals.css               # Design tokens, resets, and typography
-|   |   |-- layout.tsx                # HTML5 root layout, SEO metadata, JSON-LD
-|   |   `-- page.tsx                  # Home controller coordinating auth and vault
-|   |-- components/
-|   |   |-- AboutSection.module.css   # Architecture and setup guide styling
-|   |   |-- AboutSection.tsx          # Zero-cloud overview and mobile access steps
-|   |   |-- AuthScreen.module.css     # PIN authentication card styles
-|   |   |-- AuthScreen.tsx            # Access gatekeeper with numeric PIN input
-|   |   |-- GhostModal.module.css     # Themed confirmation dialog styles
-|   |   |-- GhostModal.tsx            # Accessible modal for destructive actions
-|   |   |-- Header.module.css         # Responsive navigation and node metrics styles
-|   |   |-- Header.tsx                # Brand bar with Node ID, LAN IP, and lock action
-|   |   |-- Icons.tsx                 # Standardized inline SVG vector icons
-|   |   |-- VaultDashboard.module.css # Dropzone and inventory list styles
-|   |   `-- VaultDashboard.tsx        # Drag-and-drop upload and file inventory list
-|   |-- lib/
-|   |   |-- db.ts                     # Embedded SQLite database via node:sqlite
-|   |   `-- vault.ts                  # Cryptographic hashing, cookies, and network helpers
-|   `-- types/
-|       `-- node-sqlite.d.ts          # Ambient TypeScript definitions for node:sqlite
-|-- data/
-|   |-- .gitkeep                      # Keeps SQLite directory tracked in git
-|   `-- shuttler.db                   # Local SQLite database (git-ignored)
-|-- shuttle_vault/
-|   |-- .gitkeep                      # Keeps storage directory tracked in git
-|   `-- ...                           # Physical uploaded files (git-ignored)
-|-- .gitignore                        # Git exclusion rules (safeguards .agents per Rule 22)
-|-- next.config.ts                    # Next.js bundler and node:sqlite external package config
-|-- package.json                      # Project dependencies and script definitions
-|-- tsconfig.json                     # TypeScript compiler configuration
-`-- README.md                         # Project documentation and architecture guide
+|-- app/
+|   |-- static/
+|   |   |-- css/
+|   |   |   |-- plugins/              # Vendor styling libraries (swiper, fancybox, bootstrap-grid)
+|   |   |   |-- style.css             # Main theme styles
+|   |   |   `-- styles.css            # Dropzone & vault UI overrides
+|   |   |-- js/
+|   |   |   |-- plugins/              # Vendor scripts (GSAP, Swup, Tilt, jQuery)
+|   |   |   |-- main.js               # Theme navigation logic
+|   |   |   `-- shuttler.js           # Vault polling, upload, and delete interactions
+|   |   |-- robots.txt                # Search crawler rules
+|   |   `-- sitemap.xml               # XML sitemap
+|   |-- templates/
+|   |   `-- index.html                # Jinja2 root vault interface
+|   |-- app.py                        # Flask server, SQLAlchemy models, and API routes
+|   |-- Dockerfile                    # Containerization specification for web service
+|   `-- requirements.txt              # Python runtime dependencies
+|-- nginx/
+|   |-- certs/                        # Local self-signed SSL certificates (git-ignored)
+|   `-- nginx.conf                    # Nginx reverse proxy and TLS configuration
+|-- docker-compose.yml                # Multi-container orchestration (web, db, nginx)
+|-- .gitignore                        # Git exclusion rules (safeguarding .agents, AGENTS.md, CLAUDE.md)
+`-- README.md                         # Complete project documentation and guide
 ```
 
 ---
 
-## Quick Start (Local Development)
+## Quick Start (Docker - Recommended)
+
+The easiest way to get Ghost_FileShuttler running is using Docker.
+
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/thulanesigasa/ghost_fileshuttler.git
+   cd ghost_fileshuttler
+   ```
+
+2. **Launch the Ghost Node:**
+   ```bash
+   docker compose up -d --build
+   ```
+
+3. **Access the App:**
+   - **Local Desktop:** Open `https://localhost:8443`
+   - **LAN / Mobile:** Locate your `LAN_IP` in the app terminal or the header (e.g., `https://192.168.34.48:8443`).
+
+---
+
+## Mobile Access Guide
+
+To run and access Ghost_FileShuttler on your mobile device:
+
+1. **Connect to the same Network:** Ensure your phone/tablet is connected to the same Wi-Fi as the host machine.
+2. **Find the LAN IP:** Look at the top-right corner of the Ghost_FS desktop header to find your `LAN_IP`.
+3. **Open Browser:** On your mobile device, enter the URL: `https://<YOUR_LAN_IP>:8443` (e.g., `https://192.168.34.48:8443`).
+4. **SSL Warning:** Since Ghost uses a self-signed certificate for local encryption, your browser will show a "Your connection is not private" warning.
+   - Click **Advanced**.
+   - Select **Proceed to <IP> (unsafe)** to enter the vault.
+5. **Pin Access:** Enter your `GHOST_PIN` to unlock the vault from your mobile.
+
+---
+
+## Local Development Setup
+
+If you want to run the application natively for development purposes:
 
 ### 1. Prerequisites
-- Node.js 20+ (Node.js 22 or 24 recommended for native `node:sqlite` support)
-- npm 10+
+- Python 3.10+
+- PostgreSQL (or adjust `DATABASE_URL` for SQLite in `app.py`)
 
-### 2. Installation
-Clone the repository and install dependencies:
+### 2. Create and Activate Virtual Environment
+**On Linux/macOS:**
 ```bash
-git clone https://github.com/thulanesigasa/ghost_fileshuttler.git
-cd ghost_fileshuttler
-npm install
+python3 -m venv venv
+source venv/bin/activate
 ```
 
-### 3. Launch Development Server
-```bash
-npm run dev
+**On Windows:**
+```powershell
+python -m venv venv
+venv\Scripts\activate
 ```
-The server will bind to `localhost:3000` and automatically detect your network LAN IP:
-- **Local Desktop:** Open [http://localhost:3000](http://localhost:3000)
-- **Local Network / LAN:** Open `http://<YOUR_LAN_IP>:3000` (e.g. `http://192.168.1.100:3000`)
 
-### 4. Build for Production
+### 3. Install Dependencies
 ```bash
-npm run build
-npm start
+pip install -r app/requirements.txt
+```
+
+### 4. Set Environment Variables
+```bash
+export SECRET_KEY="your-super-secret-key"
+export DATABASE_URL="postgresql://shuttler:ghostpass@localhost:5432/shuttlerdb"
+export GHOST_PIN="1234"
+```
+
+### 5. Run the Application
+```bash
+cd app
+python app.py
 ```
 
 ---
 
-## Mobile and Tablet Access Guide
+## Networking
 
-To access and shuttle files between your mobile phone, tablet, and host machine:
+To connect from your phone or other devices:
+1. Ensure your device is on the **same Wi-Fi/LAN** as the host.
+2. Open your browser and type the **LAN_IP** shown in the host's Ghost_FS header.
+3. Accept the self-signed certificate (Ghost uses HTTPS for local security).
 
-1. **Connect to Same Wi-Fi:** Ensure your smartphone or tablet is connected to the same Wi-Fi router as your host computer.
-2. **Find Your LAN IP:** Look at the top-right header on the host screen or click **Copy** next to `LAN_IP`.
-3. **Open Mobile Browser:** Open Safari, Chrome, or Firefox on your mobile device and navigate to:
-   ```text
-   http://<YOUR_LAN_IP>:3000
-   ```
-4. **Enter Ghost Key (PIN):** Enter the same PIN you used on your computer to open the matching vault partition.
-5. **Shuttle Files:** Upload photos, videos, or documents directly from your mobile camera roll or files app to the host vault instantly.
+## Security Note
+Ghost_FileShuttler uses a self-signed certificate by default for encrypted local traffic. In production environments, it is recommended to use a valid SSL certificate via Let's Encrypt or similar.
 
 ---
-
-## Security Model
-
-- **Zero Cloud Leakage:** All files are written directly to `shuttle_vault/` on the local machine disk.
-- **Tenant Isolation:** Vault IDs are computed using cryptographic SHA-256 digests (`hash(pin)`). No plain-text PINs are ever stored in the database.
-- **Secure Cookies:** Authentication states are maintained via `httpOnly`, `sameSite=lax` session cookies.
-- **Path Sanitization:** File paths and names are strictly sanitized against directory traversal attacks (`../`).
-
----
-
-## License and Maintainer
-
-Maintained by [Thulane Sigasa](https://github.com/thulanesigasa).
-Distributed under the MIT License.
+**Maintained by:** [Thulane Sigasa](https://github.com/thulanesigasa)
