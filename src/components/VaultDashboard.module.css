@@ -1,0 +1,381 @@
+.dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Dropzone */
+.dropZone {
+  position: relative;
+  background: var(--surface-panel);
+  border: 2px dashed var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 2rem;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.dropZone:hover {
+  border-color: var(--accent-cyan);
+  background: var(--surface-hover);
+}
+
+.dropZoneDragging {
+  border-color: var(--accent-cyan);
+  background: var(--surface-hover);
+}
+
+.dropZoneContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.uploadIconWrapper {
+  width: 68px;
+  height: 68px;
+  border-radius: 50%;
+  background: var(--accent-muted);
+  border: 1px solid var(--border-accent-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+}
+
+.dropTitle {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+}
+
+.dropSubtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  max-width: 440px;
+  line-height: 1.5;
+}
+
+.browseHighlight {
+  color: var(--accent-cyan);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.fileInputHidden {
+  display: none;
+}
+
+/* Upload Progress Container */
+.uploadProgressCard {
+  margin-top: 1.5rem;
+  padding: 1rem 1.5rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-accent-subtle);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.progressInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.progressPercent {
+  color: var(--accent-cyan);
+  font-weight: 600;
+}
+
+.progressBarTrack {
+  width: 100%;
+  height: 6px;
+  background: var(--surface-panel);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressBarFill {
+  height: 100%;
+  background: var(--accent-cyan);
+  border-radius: var(--radius-full);
+  transition: width 0.15s ease-out;
+}
+
+.uploadStatusText {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.uploadErrorText {
+  font-size: 0.8rem;
+  color: var(--accent-danger);
+}
+
+/* Files Inventory Section */
+.inventorySection {
+  background: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.75rem 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.inventoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.titleArea {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.inventoryTitle {
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+}
+
+.inventoryMeta {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.syncIndicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-dim);
+}
+
+.syncingIcon {
+  animation: spin 2s linear infinite;
+  color: var(--accent-cyan);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Search Bar */
+.searchContainer {
+  margin-bottom: 1.5rem;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-size: 0.85rem;
+  transition: border-color var(--transition-fast);
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: var(--accent-cyan);
+}
+
+/* File List */
+.fileList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.fileItem:hover {
+  border-color: var(--border-accent-subtle);
+  background: var(--surface-hover);
+}
+
+.fileMainInfo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+  flex-grow: 1;
+}
+
+.fileIconWrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-cyan);
+  flex-shrink: 0;
+}
+
+.fileTextWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.fileName {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-main);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 450px;
+}
+
+.fileMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}
+
+.fileDot {
+  color: var(--text-dim);
+}
+
+/* Actions */
+.fileActions {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+.actionBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.downloadBtn {
+  background: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--accent-cyan);
+}
+
+.downloadBtn:hover {
+  background: var(--accent-muted);
+  border-color: var(--accent-cyan);
+}
+
+.deleteBtn {
+  background: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-dim);
+}
+
+.deleteBtn:hover {
+  background: var(--accent-danger-subtle);
+  border-color: rgba(224, 82, 82, 0.4);
+  color: var(--accent-danger);
+}
+
+/* Empty State */
+.emptyState {
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  border: 1px dashed var(--border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.emptyIcon {
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.emptyTitle {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.emptySubtitle {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 360px;
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 1.5rem 1rem;
+    gap: 1.75rem;
+  }
+
+  .dropZone {
+    padding: 2.5rem 1rem;
+  }
+
+  .inventorySection {
+    padding: 1.25rem 1rem;
+  }
+
+  .fileName {
+    max-width: 200px;
+  }
+
+  .fileItem {
+    padding: 0.85rem 1rem;
+  }
+}

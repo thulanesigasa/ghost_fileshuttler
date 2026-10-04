@@ -1,8 +1,49 @@
-__pycache__/
-*.pyc
+# Next.js
+.next/
+out/
+build/
+dist/
+node_modules/
+
+# Environment files
 .env
-shuttle_vault/
-nginx/certs/
+.env*.local
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Ghost Vault & Database files
+shuttle_vault/*
+!shuttle_vault/.gitkeep
+data/*
+!data/.gitkeep
+*.sqlite
+*.sqlite3
+*.db
+*.db-journal
+
+# Agent Workspace & Scratch (Mandatory Rule 22)
+.agents/
+.agents
+
+# Legacy Python & Virtual Environments
 venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Certificates & Keys
+nginx/certs/
+*.pem
+*.crt
+*.key
+
+# IDEs & OS metadata
 .idea/
 .vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

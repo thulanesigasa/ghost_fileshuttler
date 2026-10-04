@@ -1,0 +1,119 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 6, 10, 0.85);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.modal {
+  width: 100%;
+  max-width: 480px;
+  background: var(--surface-panel);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.iconWrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconDanger {
+  background: var(--accent-danger-subtle);
+  color: var(--accent-danger);
+  border: 1px solid rgba(224, 82, 82, 0.3);
+}
+
+.iconDefault {
+  background: var(--accent-muted);
+  color: var(--accent-cyan);
+  border: 1px solid var(--border-accent-subtle);
+}
+
+.title {
+  font-family: var(--font-mono);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-main);
+}
+
+.message {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.highlight {
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.btnCancel {
+  padding: 0.65rem 1.25rem;
+  background: var(--surface-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.btnCancel:hover {
+  background: var(--surface-hover);
+  color: var(--text-main);
+  border-color: var(--text-dim);
+}
+
+.btnConfirm {
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.btnConfirm:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btnDanger {
+  background: var(--accent-danger);
+  color: #ffffff;
+}
+
+.btnPrimary {
+  background: var(--accent-cyan);
+  color: #070a0f;
+}
