@@ -103,8 +103,6 @@ ghost_fileshuttler/
 |-- shuttle_vault/
 |   |-- .gitkeep                      # Keeps storage directory tracked in git
 |   `-- ...                           # Physical uploaded files (git-ignored)
-|-- legacy_flask/                     # Archived Python/Flask implementation
-|-- nginx/                            # Archived Nginx reverse proxy configuration
 |-- .gitignore                        # Git exclusion rules (safeguards .agents per Rule 22)
 |-- next.config.ts                    # Next.js bundler and node:sqlite external package config
 |-- package.json                      # Project dependencies and script definitions
