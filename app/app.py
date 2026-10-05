@@ -70,15 +70,19 @@ def index():
 def authenticate():
     data = request.get_json()
     if not data or 'pin' not in data or not data['pin'].strip():
-        return jsonify({'error': 'Ghost Key (PIN) is required'}), 400
+        return jsonify({'error': '4-Digit Ghost Key is required'}), 400
     
-    # Accept any PIN, but use its hash to separate user vaults
     user_pin = data['pin'].strip()
+    if len(user_pin) != 4 or not user_pin.isdigit():
+        return jsonify({'error': 'PIN must be exactly 4 digits (e.g. 1234)'}), 400
+    
+    # Hash 4-digit PIN for tenant isolation across devices
     vault_hash = hashlib.sha256(user_pin.encode()).hexdigest()
     
+    session.permanent = True
     session['authenticated'] = True
     session['vault_id'] = vault_hash
-    return jsonify({'message': 'Access Granted to secure vault'})
+    return jsonify({'message': 'Access Granted to secure vault', 'vault_id': vault_hash[:8]})
 
 @app.route('/logout', methods=['POST'])
 def logout():

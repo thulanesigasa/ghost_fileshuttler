@@ -262,8 +262,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Automatic Sync (Polling)
-    // Synchronize the vault every 1 second to ensure all users see new uploads immediately.
+    // Synchronize the vault every 2 seconds to ensure all users see new uploads immediately.
     if (fileList) {
-        setInterval(loadFiles, 3000);
+        setInterval(loadFiles, 2000);
     }
 });
