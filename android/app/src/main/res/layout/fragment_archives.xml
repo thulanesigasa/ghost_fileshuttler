@@ -1,69 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ghost_background">
+    android:background="@color/ghost_background"
+    android:orientation="vertical">
 
-    <FrameLayout
+    <!-- Header Section: Secure Vault -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="8dp">
 
-        <!-- RecyclerView for File List -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvVaultFiles"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:clipToPadding="false"
-            android:padding="16dp"
-            android:paddingBottom="96dp" />
+            android:layout_height="wrap_content"
+            android:text="@string/secure_vault_title"
+            android:textColor="@color/ghost_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <!-- Empty State Container -->
-        <LinearLayout
-            android:id="@+id/layoutEmpty"
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="32dp"
-            android:visibility="gone">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/secure_vault_subtitle"
+            android:textColor="@color/ghost_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-            <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
-                android:contentDescription="Empty"
-                android:src="@drawable/ic_folder_archive"
-                app:tint="@color/ghost_text_muted" />
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="@string/empty_archives_title"
-                android:textColor="@color/ghost_text_primary"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+            <!-- RecyclerView for File List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvVaultFiles"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="96dp" />
+
+            <!-- Empty State Container -->
+            <LinearLayout
+                android:id="@+id/layoutEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:gravity="center"
-                android:lineSpacingExtra="3dp"
-                android:text="@string/empty_archives_subtitle"
-                android:textColor="@color/ghost_text_secondary"
-                android:textSize="13sp" />
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:visibility="gone">
 
-        <!-- Loading Indicator -->
-        <ProgressBar
-            android:id="@+id/progressArchives"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:indeterminateTint="@color/ghost_accent"
-            android:visibility="gone" />
+                <ImageView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="Empty"
+                    android:src="@drawable/ic_folder_archive"
+                    app:tint="@color/ghost_text_muted" />
 
-    </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/empty_archives_title"
+                    android:textColor="@color/ghost_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/empty_archives_subtitle"
+                    android:textColor="@color/ghost_text_secondary"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- Loading Indicator: White -->
+            <ProgressBar
+                android:id="@+id/progressArchives"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/ghost_text_primary"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>
