@@ -5,6 +5,7 @@
 ![Database](https://img.shields.io/badge/Database-PostgreSQL_15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Theme](https://img.shields.io/badge/Theme-Ghost_Cyan-00c3cf?style=for-the-badge)
 ![Real-Time](https://img.shields.io/badge/Sync-1s_Polling-00ff9d?style=for-the-badge)
+![Scale](https://img.shields.io/badge/Scale-Viewport_Calibrated-00f0ff?style=for-the-badge)
 
 A production-ready, ultra-secure, and lightning-fast local-network file-sharing system. Designed with a premium Ghost Cyan aesthetic, it allows for seamless file transfers between devices (Mobile, Desktop, Tablet) without leaving your local network.
 
@@ -13,6 +14,7 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
 ## Features
 
 - **Real-Time Sync:** Files appear across all connected nodes within 1 second without refreshing.
+- **Viewport-Calibrated Scale:** The 100% default zoom matches the compact, balanced proportions of 67% zoom, ensuring the entire terminal and vault cards fit seamlessly within standard laptop and desktop viewports without clipping.
 - **Secure Vault:** Protected by PIN-based authentication with SHA-256 tenant isolation.
 - **Cross-Platform:** Fully responsive UI tailored for Mobile, Tablet, and Desktop.
 - **Themed Modals:** Custom-built Ghost dialogs for a premium user experience.
@@ -160,6 +162,21 @@ export GHOST_PIN="1234"
 cd app
 python app.py
 ```
+
+---
+
+## Viewport and Responsive Sizing Calibration
+
+Ghost_FileShuttler implements a calibrated layout architecture tailored for cross-screen harmony:
+- **Calibrated Scale:** Replaces oversized editorial fonts (68px/84px) and massive 120px padding with balanced desktop proportions (38px titles, 26px dropzone padding) matching the visual balance of a 67% zoom baseline at standard 100% browser zoom.
+- **Strict 60-30-10 Palette:**
+  - 60% Dominant Background: `#0a0c10` / `#000000` deep obsidian.
+  - 30% Surface / Panel: `rgba(22, 26, 34, 0.65)` glass-morphic cards with subtle hairline borders.
+  - 10% Accent: `#00f0ff` Ghost Cyan for focal actions and active progress indicators.
+- **Adaptive Viewport Centering:** The root banner utilizes flexible auto-height viewport centering, eliminating vertical overflow and ensuring both the Shuttle Terminal and Secure Vault columns remain visible above the fold on all standard laptop displays (1366x768, 1440x900, 1536x864, and 1920x1080).
+- **Responsive Breakpoints:**
+  - Desktops & Laptops (> 860px): Dual-column side-by-side terminal and vault list.
+  - Tablets & Mobile (<= 860px): Automatic single-column stack, static flow header, and touch-optimized action targets.
 
 ---
 

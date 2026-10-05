@@ -70,8 +70,7 @@
             <div class="mil-frame-top">
                 <a href="/" class="mil-logo">Ghost_FS</a>
                 <div style="display: flex; align-items: center;">
-                    <div class="mil-frame-info mil-mobile-hidden"
-                        style="color: var(--accent-1); font-size: 14px; font-weight: 600; text-align: right; line-height: 1.2; margin-right: 30px;">
+                    <div class="mil-frame-info mil-mobile-hidden">
                         NODE_ID: {{ host_ip }}<br>
                         LAN_IP: {{ lan_ip }}
                     </div>
@@ -103,64 +102,56 @@
                         <div class="container">
 
                             {% if not is_auth %}
-                            <div class="mil-banner-content mil-up"
-                                style="max-width: 500px; margin: 0 auto; padding-top: 15vh;">
-                                <h1 class="mil-muted mil-mb-60">Vault <span class="mil-thin">Access</span></h1>
-                                <p class="mil-light-soft mil-mb-60">Enter the Ghost Key to view and transfer Amapiano
+                            <div class="mil-banner-content mil-up auth-box">
+                                <h1 class="mil-muted mil-mb-30">Vault <span class="mil-thin">Access</span></h1>
+                                <p class="mil-light-soft mil-mb-30">Enter the Ghost Key to view and transfer Amapiano
                                     stems securely across your local network.</p>
 
                                 <form id="auth-form" style="text-align: center;">
                                     <input type="password" id="pin-input" placeholder="Enter PIN" inputmode="numeric"
-                                        required
-                                        style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 15px 30px; margin-bottom: 2rem;">
-                                    <button type="submit" class="mil-button"
-                                        style="padding: 0 40px; justify-content: center; height: 50px; display: inline-flex; width: auto; margin: 0 auto;">
+                                        required>
+                                    <button type="submit" class="mil-button auth-submit-btn">
                                         <span>Unlock Vault</span>
                                     </button>
                                 </form>
-                                <div id="auth-error" class="error-msg" style="color: #ff4a4a; margin-top: 20px;"></div>
+                                <div id="auth-error" class="error-msg" style="color: var(--danger); margin-top: 15px;"></div>
                             </div>
                             {% else %}
-                            <div class="row mil-p-120-120 dashboard-section">
-                                <div class="col-lg-6 mil-mb-60">
-                                    <h2 class="mil-muted mil-mb-30">Shuttle <span class="mil-thin">Terminal</span></h2>
-                                    <p class="mil-light-soft mil-mb-60">Upload new files natively to the secure vault
+                            <div class="row dashboard-section">
+                                <div class="col-lg-6 mil-mb-30">
+                                    <h2 class="mil-muted mil-mb-15">Shuttle <span class="mil-thin">Terminal</span></h2>
+                                    <p class="mil-light-soft mil-mb-30">Upload new files natively to the secure vault
                                         via drag and drop.</p>
 
                                     <!-- Dropzone -->
-                                    <div class="drop-zone" id="drop-zone"
-                                        style="border: 2px dashed rgba(255,255,255,0.2); padding: 50px; border-radius: 20px; text-align: center; cursor: pointer;">
-                                        <div class="drop-icon mil-mb-30">
-                                            <i class="fas fa-cloud-upload-alt fa-3x"
-                                                style="color: var(--accent-1);"></i>
+                                    <div class="drop-zone" id="drop-zone">
+                                        <div class="drop-icon mil-mb-15">
+                                            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v8"/>
+                                            </svg>
                                         </div>
                                         <h5 class="mil-muted mil-mb-15">Drag & Drop files here</h5>
                                         <p class="mil-light-soft">or</p>
-                                        <label for="file-upload" class="mil-button mt-3"
-                                            style="margin-top:20px; padding: 0 40px; justify-content: center; height: 50px;">
+                                        <label for="file-upload" class="mil-button browse-btn">
                                             <span>Browse</span>
                                         </label>
                                         <input type="file" id="file-upload" hidden>
                                     </div>
 
-                                    <div id="upload-progress" class="progress-bar-container hidden"
-                                        style="margin-top: 20px; height: 5px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden;">
-                                        <div class="progress-bar" id="progress-bar"
-                                            style="height: 100%; width: 0%; background: var(--accent-1); transition: width 0.3s;">
+                                    <div id="upload-progress" class="progress-bar-container hidden">
+                                        <div class="progress-bar" id="progress-bar">
                                         </div>
                                     </div>
-                                    <div id="upload-status" class="status-msg"
-                                        style="margin-top: 15px; color: var(--accent-1);"></div>
+                                    <div id="upload-status" class="status-msg"></div>
 
                                 </div>
                                 <div class="col-lg-6">
-                                    <h2 class="mil-muted mil-mb-30">Secure <span class="mil-thin">Vault</span></h2>
-                                    <p class="mil-light-soft mil-mb-60">Retrieve stems hosted locally on the Ghost_FS
+                                    <h2 class="mil-muted mil-mb-15">Secure <span class="mil-thin">Vault</span></h2>
+                                    <p class="mil-light-soft mil-mb-30">Retrieve stems hosted locally on the Ghost_FS
                                         node.</p>
 
-                                    <div class="file-list-container"
-                                        style="max-height: 500px; overflow-y: auto; padding-right: 20px;">
-                                        <ul id="file-list" style="list-style: none; padding: 0;">
+                                    <div class="file-list-container">
+                                        <ul id="file-list">
                                             <li class="mil-muted">Fetching secured files...</li>
                                         </ul>
                                     </div>
