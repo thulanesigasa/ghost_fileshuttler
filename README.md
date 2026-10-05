@@ -13,14 +13,10 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
 ## Features
 
 - **Real-Time Sync:** Files appear across all connected nodes within 1 second without refreshing.
-- **Audio Stem Player:** Embedded in-browser player with interactive waveform scrubbing for WAV, MP3, FLAC, and OGG audio stems.
-- **Multi-File Batch Shuttling:** Drag and drop entire multi-track sessions or folder exports simultaneously.
-- **Download All (ZIP):** Export the complete vault partition as a compressed ZIP archive in one click.
-- **Instant Mobile QR Pairing:** One-tap QR code generation for zero-typing connection from smartphones and tablets.
-- **Storage Metrics & Quota:** Real-time visual tracking of partition capacity (up to 10 GB) and stem counts.
 - **Secure Vault:** Protected by PIN-based authentication with SHA-256 tenant isolation.
 - **Cross-Platform:** Fully responsive UI tailored for Mobile, Tablet, and Desktop.
 - **Themed Modals:** Custom-built Ghost dialogs for a premium user experience.
+- **Easy Management:** Upload, Download, and Permanently Delete files from any device.
 - **Privacy First:** Data never leaves your local network.
 
 ---
@@ -33,7 +29,7 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
                       |   (Mobile / Tablet / Desktop Clients) |
                       +-------------------+-------------------+
                                           |
-                      HTTPS (Port 8443) / HTTP (Port 5000)
+                      HTTPS (Port 8443) / HTTP (Port 8080)
                                           v
                       +---------------------------------------+
                       |         Nginx (OWASP ModSecurity)     |
@@ -45,8 +41,6 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
                       +---------------------------------------+
                       |             Flask Web Node            |
                       |  - SQLAlchemy ORM & Auth Session      |
-                      |  - Audio Stem Streaming Engine        |
-                      |  - Dynamic ZIP Archive Exporter       |
                       |  - Multi-Tenant Vault Routing         |
                       +-------------------+-------------------+
                                           |
@@ -54,10 +48,9 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
                        |                                     |
                        v                                     v
          +---------------------------+         +---------------------------+
-         |     PostgreSQL / SQLite   |         |    shuttle_vault/ Disk    |
+         |      PostgreSQL DB        |         |    shuttle_vault/ Disk    |
          |  - Vault IDs (Hashed PIN) |         |  - Direct File Storage    |
          |  - File Metadata & Sizes  |         |  - UUID Prefixed Paths    |
-         |  - MIME-Type & Audio Tag  |         |  - Multi-File Streaming   |
          +---------------------------+         +---------------------------+
 ```
 
@@ -72,19 +65,18 @@ ghost_fileshuttler/
 |   |   |-- css/
 |   |   |   |-- plugins/              # Vendor styling libraries (swiper, fancybox, bootstrap-grid)
 |   |   |   |-- style.css             # Main theme styles
-|   |   |   `-- styles.css            # Dropzone, stem player, metrics & viability styling
+|   |   |   `-- styles.css            # Dropzone & vault UI overrides
 |   |   |-- js/
 |   |   |   |-- plugins/              # Vendor scripts (GSAP, Swup, Tilt, jQuery)
 |   |   |   |-- main.js               # Theme navigation logic
-|   |   |   |-- qr-generator.js       # Pure-JS SVG QR code generator for mobile pairing
-|   |   |   `-- shuttler.js           # Multi-file queue, stem playback, and real-time polling
+|   |   |   `-- shuttler.js           # Vault polling, upload, and delete interactions
 |   |   |-- robots.txt                # Search crawler rules
 |   |   `-- sitemap.xml               # XML sitemap
 |   |-- templates/
-|   |   `-- index.html                # Jinja2 root interface with stem player, specs & FAQ
-|   |-- app.py                        # Flask server, stem streaming, ZIP export, and API routes
+|   |   `-- index.html                # Jinja2 root vault interface
+|   |-- app.py                        # Flask server, SQLAlchemy models, and API routes
 |   |-- Dockerfile                    # Containerization specification for web service
-|   `-- requirements.txt              # Python runtime dependencies (Python 3.10-3.14 compatible)
+|   `-- requirements.txt              # Python runtime dependencies
 |-- nginx/
 |   |-- certs/                        # Local self-signed SSL certificates (git-ignored)
 |   `-- nginx.conf                    # Nginx reverse proxy and TLS configuration

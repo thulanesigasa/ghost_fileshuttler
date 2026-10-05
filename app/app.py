@@ -2,11 +2,8 @@ import os
 import socket
 import hashlib
 import uuid
-import io
-import zipfile
-import mimetypes
 from builtins import Exception, ValueError, print
-from flask import Flask, render_template, request, jsonify, session, send_from_directory, send_file
+from flask import Flask, render_template, request, jsonify, session, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 import functools
@@ -30,31 +27,17 @@ class FileMetadata(db.Model):
     vault_id = db.Column(db.String(64), nullable=False) # Hashed PIN for tenant isolation
     filename = db.Column(db.String(255), nullable=False)
     filepath = db.Column(db.String(512), nullable=False)
-    file_size = db.Column(db.BigInteger, default=0)
-    mime_type = db.Column(db.String(128), default='application/octet-stream')
     uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
 
 with app.app_context():
     try:
         db.create_all()
-        # Verify schema by testing read
+        # Verify schema hasn't changed by attempting a read
         FileMetadata.query.first()
     except Exception as e:
-        print(f"Schema update needed: {e}")
-        try:
-            with db.engine.connect() as conn:
-                try:
-                    conn.execute(db.text("ALTER TABLE file_metadata ADD COLUMN file_size BIGINT DEFAULT 0"))
-                except Exception:
-                    pass
-                try:
-                    conn.execute(db.text("ALTER TABLE file_metadata ADD COLUMN mime_type VARCHAR(128) DEFAULT 'application/octet-stream'"))
-                except Exception:
-                    pass
-                conn.commit()
-        except Exception:
-            db.drop_all()
-            db.create_all()
+        print("Schema altered, recreating database tables...")
+        db.drop_all()
+        db.create_all()
 
 def login_required(f):
     @functools.wraps(f)
@@ -67,6 +50,7 @@ def login_required(f):
 def get_host_ip():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        # Doesn't need to be reachable
         s.connect(('10.255.255.255', 1))
         IP = s.getsockname()[0]
     except Exception:
@@ -78,7 +62,7 @@ def get_host_ip():
 @app.route('/')
 def index():
     host_ip = get_host_ip()
-    lan_ip = os.environ.get('LAN_IP', host_ip)
+    lan_ip = os.environ.get('LAN_IP', host_ip)  # Default to internal if not set
     is_auth = session.get('authenticated', False)
     return render_template('index.html', host_ip=host_ip, lan_ip=lan_ip, is_auth=is_auth)
 
@@ -88,12 +72,13 @@ def authenticate():
     if not data or 'pin' not in data or not data['pin'].strip():
         return jsonify({'error': 'Ghost Key (PIN) is required'}), 400
     
+    # Accept any PIN, but use its hash to separate user vaults
     user_pin = data['pin'].strip()
     vault_hash = hashlib.sha256(user_pin.encode()).hexdigest()
     
     session['authenticated'] = True
     session['vault_id'] = vault_hash
-    return jsonify({'message': 'Access Granted to secure vault', 'vault_id': vault_hash[:8]})
+    return jsonify({'message': 'Access Granted to secure vault'})
 
 @app.route('/logout', methods=['POST'])
 def logout():
@@ -104,77 +89,39 @@ def logout():
 @app.route('/upload', methods=['POST'])
 @login_required
 def upload_file():
-    vault_id = session.get('vault_id')
-    files = request.files.getlist('files')
-    if not files or len(files) == 0 or (len(files) == 1 and files[0].filename == ''):
-        files = request.files.getlist('file')
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part'}), 400
+    file = request.files['file']
+    if file.filename == '':
+        return jsonify({'error': 'No selected file'}), 400
     
-    if not files or len(files) == 0 or (len(files) == 1 and files[0].filename == ''):
-        return jsonify({'error': 'No file selected for upload'}), 400
-
-    saved_files = []
-    
-    for file in files:
-        if not file or file.filename == '':
-            continue
-        filename = secure_filename(file.filename) or f"shuttle_file_{uuid.uuid4().hex[:6]}"
+    if file:
+        vault_id = session.get('vault_id')
+        filename = secure_filename(file.filename)
+        # Ensure unique filepath across different vaults saving the same filename
         unique_id = uuid.uuid4().hex[:12]
         safe_filename = f"{unique_id}_{filename}"
         filepath = os.path.join(VAULT_DIR, safe_filename)
-
+        
         try:
             file.save(filepath)
-            file_size = os.path.getsize(filepath) if os.path.exists(filepath) else 0
-            mime_type, _ = mimetypes.guess_type(filename)
-            mime_type = mime_type or file.content_type or 'application/octet-stream'
-
-            metadata = FileMetadata(
-                vault_id=vault_id,
-                filename=filename,
-                filepath=filepath,
-                file_size=file_size,
-                mime_type=mime_type
-            )
+            metadata = FileMetadata(vault_id=vault_id, filename=filename, filepath=filepath)
             db.session.add(metadata)
             db.session.commit()
-            saved_files.append({
-                'id': metadata.id,
-                'filename': filename,
-                'file_size': file_size,
-                'mime_type': mime_type
-            })
+            return jsonify({'message': 'File uploaded successfully', 'filename': filename})
         except Exception as e:
             db.session.rollback()
             if os.path.exists(filepath):
                 os.remove(filepath)
             print(f"Upload error: {e}")
-            return jsonify({'error': f'Upload failed: {str(e)}'}), 500
-
-    return jsonify({
-        'message': f'Successfully shuttled {len(saved_files)} file(s)',
-        'uploaded': saved_files
-    })
+            return jsonify({'error': 'Upload failed due to a server error.'}), 500
 
 @app.route('/files', methods=['GET'])
 @login_required
 def list_files():
     vault_id = session.get('vault_id')
     files = FileMetadata.query.filter_by(vault_id=vault_id).order_by(FileMetadata.uploaded_at.desc()).all()
-    
-    audio_extensions = {'.wav', '.mp3', '.ogg', '.flac', '.aac', '.m4a', '.aiff'}
-    
-    file_list = []
-    for f in files:
-        ext = os.path.splitext(f.filename)[1].lower()
-        is_audio = ext in audio_extensions or (f.mime_type and f.mime_type.startswith('audio/'))
-        file_list.append({
-            'id': f.id,
-            'filename': f.filename,
-            'file_size': f.file_size or (os.path.getsize(f.filepath) if os.path.exists(f.filepath) else 0),
-            'mime_type': f.mime_type or 'application/octet-stream',
-            'is_audio': bool(is_audio),
-            'uploaded_at': f.uploaded_at.isoformat() if f.uploaded_at else ''
-        })
+    file_list = [{'id': f.id, 'filename': f.filename, 'uploaded_at': f.uploaded_at.isoformat()} for f in files]
     return jsonify(file_list)
 
 @app.route('/download/<int:file_id>', methods=['GET'])
@@ -182,80 +129,10 @@ def list_files():
 def download_file(file_id):
     vault_id = session.get('vault_id')
     file_meta = FileMetadata.query.filter_by(id=file_id, vault_id=vault_id).first()
-    if not file_meta or not os.path.exists(file_meta.filepath):
+    if not file_meta:
         return jsonify({'error': 'File not found or unauthorized'}), 404
     
-    return send_from_directory(
-        VAULT_DIR,
-        os.path.basename(file_meta.filepath),
-        as_attachment=True,
-        download_name=file_meta.filename,
-        mimetype=file_meta.mime_type or 'application/octet-stream'
-    )
-
-@app.route('/stream/<int:file_id>', methods=['GET'])
-@login_required
-def stream_file(file_id):
-    vault_id = session.get('vault_id')
-    file_meta = FileMetadata.query.filter_by(id=file_id, vault_id=vault_id).first()
-    if not file_meta or not os.path.exists(file_meta.filepath):
-        return jsonify({'error': 'Audio file not found or unauthorized'}), 404
-
-    return send_from_directory(
-        VAULT_DIR,
-        os.path.basename(file_meta.filepath),
-        as_attachment=False,
-        mimetype=file_meta.mime_type or 'application/octet-stream'
-    )
-
-@app.route('/download-all', methods=['GET'])
-@login_required
-def download_all_zip():
-    vault_id = session.get('vault_id')
-    files = FileMetadata.query.filter_by(vault_id=vault_id).all()
-    if not files:
-        return jsonify({'error': 'Vault partition is empty. Nothing to archive.'}), 404
-
-    memory_file = io.BytesIO()
-    with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
-        added_names = set()
-        for f in files:
-            if os.path.exists(f.filepath):
-                # Ensure unique filename inside zip if duplicates exist
-                arcname = f.filename
-                counter = 1
-                name_base, ext = os.path.splitext(f.filename)
-                while arcname in added_names:
-                    arcname = f"{name_base}_({counter}){ext}"
-                    counter += 1
-                added_names.add(arcname)
-                zf.write(f.filepath, arcname=arcname)
-
-    memory_file.seek(0)
-    zip_filename = f"ghost_vault_stems_{vault_id[:8]}.zip"
-    return send_file(
-        memory_file,
-        mimetype='application/zip',
-        as_attachment=True,
-        download_name=zip_filename
-    )
-
-@app.route('/vault-stats', methods=['GET'])
-@login_required
-def vault_stats():
-    vault_id = session.get('vault_id')
-    files = FileMetadata.query.filter_by(vault_id=vault_id).all()
-    total_bytes = sum(f.file_size or (os.path.getsize(f.filepath) if os.path.exists(f.filepath) else 0) for f in files)
-    host_ip = get_host_ip()
-    lan_ip = os.environ.get('LAN_IP', host_ip)
-    
-    return jsonify({
-        'total_files': len(files),
-        'total_bytes': total_bytes,
-        'quota_bytes': 10 * 1024 * 1024 * 1024, # 10 GB partition limit
-        'host_ip': host_ip,
-        'lan_ip': lan_ip
-    })
+    return send_from_directory(VAULT_DIR, os.path.basename(file_meta.filepath), as_attachment=True, download_name=file_meta.filename)
 
 @app.route('/delete/<int:file_id>', methods=['POST', 'DELETE'])
 @login_required
@@ -271,7 +148,7 @@ def delete_file(file_id):
         
         db.session.delete(file_meta)
         db.session.commit()
-        return jsonify({'message': 'File deleted successfully', 'id': file_id})
+        return jsonify({'message': 'File deleted successfully'})
     except Exception as e:
         db.session.rollback()
         print(f"Delete error: {e}")
