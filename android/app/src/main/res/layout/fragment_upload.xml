@@ -13,12 +13,23 @@
         android:padding="16dp"
         android:paddingBottom="96dp">
 
+        <!-- Section Title: Shuttle Terminal -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:text="@string/shuttle_terminal_title"
+            android:textColor="@color/ghost_text_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <!-- Section Subtitle: Upload new files natively to the secure vault via drag and drop. -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="20dp"
             android:lineSpacingExtra="2dp"
-            android:text="Secure cross-device shuttle synchronized to your 4-digit vault partition."
+            android:text="@string/shuttle_terminal_subtitle"
             android:textColor="@color/ghost_text_secondary"
             android:textSize="13sp" />
 
@@ -40,7 +51,7 @@
                 android:layout_height="48dp"
                 android:contentDescription="@string/dropzone_title"
                 android:src="@drawable/ic_upload_cloud"
-                app:tint="@color/ghost_accent" />
+                app:tint="@color/ghost_text_primary" />
 
             <TextView
                 android:id="@+id/tvDropzoneTitle"
@@ -89,7 +100,7 @@
                         android:layout_height="32dp"
                         android:contentDescription="File"
                         android:src="@drawable/ic_file"
-                        app:tint="@color/ghost_accent" />
+                        app:tint="@color/ghost_text_primary" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -134,24 +145,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="6dp"
                     android:layout_marginTop="12dp"
-                    android:indeterminateTint="@color/ghost_accent"
-                    android:progressTint="@color/ghost_accent"
+                    android:indeterminateTint="@color/ghost_text_primary"
+                    android:progressTint="@color/ghost_text_primary"
                     android:visibility="gone" />
 
-                <!-- Upload CTA Button -->
+                <!-- Upload CTA Button: Pure White Background, Dark Obsidian Text -->
                 <Button
                     android:id="@+id/btnShuttleUpload"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="16dp"
-                    android:background="@drawable/bg_accent_button"
+                    android:background="@drawable/bg_white_button"
                     android:letterSpacing="0.04"
                     android:text="@string/shuttle_to_vault"
                     android:textAllCaps="false"
                     android:textColor="@color/ghost_background"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:backgroundTint="@color/ghost_accent" />
+                    app:backgroundTint="@color/ghost_text_primary" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
