@@ -24,25 +24,36 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- Header Brand Logo -->
+                <!-- Header Brand Logo (reduced by 12% per directive) -->
                 <ImageView
                     android:id="@+id/imgHeaderLogo"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
+                    android:layout_width="31dp"
+                    android:layout_height="31dp"
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:contentDescription="@string/brand_title"
                     android:src="@drawable/ic_vault_brand" />
 
                 <TextView
+                    android:id="@+id/tvHeaderBrandVault"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:letterSpacing="0.03"
-                    android:text="@string/brand_title"
+                    android:text=".Vault"
                     android:textColor="@color/ghost_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvHeaderBrandAccess"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.03"
+                    android:text=" Access"
+                    android:textColor="@color/ghost_text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="normal" />
 
                 <View
                     android:layout_width="0dp"

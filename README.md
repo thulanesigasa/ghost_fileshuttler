@@ -1,33 +1,63 @@
 # Ghost_FileShuttler
 
 ![Framework](https://img.shields.io/badge/Framework-Flask_2.3-000000?style=for-the-badge&logo=flask&logoColor=white)
-![Android](https://img.shields.io/badge/Mobile-Native_Android_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Mobile](https://img.shields.io/badge/Mobile-Native_Android_Kotlin-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)
+![Cloud](https://img.shields.io/badge/Cloud-Supabase_Storage_%26_PostgREST-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![Build](https://img.shields.io/badge/Build-Gradle_8.7-02303A?style=for-the-badge&logo=gradle&logoColor=white)
 ![Proxy](https://img.shields.io/badge/Proxy-Nginx_OWASP_CRS-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL_15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions_Native-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
 ![Theme](https://img.shields.io/badge/Theme-Ghost_Cyan-00c3cf?style=for-the-badge)
-![Real-Time](https://img.shields.io/badge/Sync-Real--Time_2s-00ff9d?style=for-the-badge)
+![Sync](https://img.shields.io/badge/Sync-Real--Time_2s-00ff9d?style=for-the-badge)
 ![Brand](https://img.shields.io/badge/Brand-.Vault_Access-ffffff?style=for-the-badge)
 
-A production-ready, ultra-secure, and lightning-fast local-network file-sharing system. Designed with a premium Ghost Cyan aesthetic, it enables seamless cross-device file shuttling between desktop web browsers and native Android mobile devices over your local Wi-Fi without leaving your private network.
+A production-ready, ultra-secure, and lightning-fast cross-platform file-shuttling ecosystem. Featuring a calibrated **.Vault Access** aesthetic with a strict 60-30-10 dark obsidian palette, it enables seamless file shuttling between desktop web browsers and native Android devices globally across networks via Supabase Cloud Vault or locally over LAN Wi-Fi without forcing IP address configuration.
 
 ---
 
 ## Key Features
 
-- **Real-Time Cross-Device Synchronization:** Files shuttled from desktop web or mobile devices synchronize every 2 seconds without requiring manual page reloads.
-- **4-Digit Secure Vault Partitioning:** Protected by SHA-256 tenant isolation. Entering the identical 4-digit PIN on any phone or desktop joins the devices to the same private partition for immediate mutual file access.
+- **Cross-Network Global File Shuttling (Supabase Cloud Vault):** Bypass direct IP addresses and Wi-Fi boundaries. Devices on separate networks (mobile data, remote offices, separate cities) pair instantly through an identical 4-digit PIN.
+- **Zero-Configuration Instant Pairing:** When launching the Android app or web interface, entering a 4-digit secret PIN (e.g. `1024`) joins the device to that secret partition. Files uploaded on PC appear immediately on phone in real-time.
+- **Auto-Purge & Cloud Hygiene:** Downloaded or removed files are seamlessly deleted from cloud storage and database records, preventing redundant cloud storage consumption.
+- **Dual-Mode Connectivity (Cloud & Local LAN):** Default Cloud Vault mode for global sync with optional toggle to Local Area Network (Flask/Nginx) for isolated air-gapped environments.
 - **Native Android Companion App (100% Kotlin):** Built natively in Kotlin using Android Studio architecture, Gradle 8.7, Material 3, OkHttp 4.12, Coroutines, and ViewBinding.
+- **Calibrated Brand Typography:** Features precise brand styling where **.Vault** is bold and **Access** is regular text weight in pure white (#FFFFFF), paired with 12% reduced logo sizing for visual balance.
 - **Floating Pill Bottom Navigation:** Implements the curved rectangular floating pill tab bar with dynamic horizontal centering (280dp x 50dp, 16dp radius, 4x4 active dot indicator) with Upload and Archives screens.
-- **Direct GitHub Actions Native Compilation:** Compiles release APK binaries directly on GitHub Actions runners using open-source Eclipse Temurin Java 17 and Android SDK toolchains without relying on third-party cloud build queues.
+- **Direct GitHub Actions Native Compilation:** Compiles release APK binaries directly on GitHub Actions runners using open-source Eclipse Temurin Java 17 and Android SDK toolchains without relying on third-party cloud build credits.
 - **Automatic GitHub Releases Distribution:** Every release compiled in CI is automatically packaged and published to GitHub Releases as a downloadable APK.
 - **Strict 60-30-10 Design System:** 60% deep obsidian background (#0A0C10), 30% panel/surface (#161A22), and 10% Ghost Cyan accent (#00F0FF).
-- **Decoupled Adaptive Launcher & In-App Brand Icons:** Android adaptive launcher icon calibrated with 96px icon height and ~72% breathing room to prevent Samsung One UI squircle clipping, paired with crisp in-app brand logos.
 
 ---
 
 ## System Architecture
+
+```
+                      +---------------------------------------+
+                      |         Anywhere in the World         |
+                      |   (Android Native & Desktop Web)      |
+                      +-------------------+-------------------+
+                                          |
+                                          | Pure HTTPS REST / Storage
+                                          v
+                      +---------------------------------------+
+                      |        Supabase Cloud Gateway         |
+                      |   - PostgREST: /rest/v1/vault_shuttle |
+                      |   - Storage:   /storage/v1/vault_files|
+                      |   - Global 4-Digit PIN Partitioning   |
+                      +-------------------+-------------------+
+                                          |
+                        +-----------------+-----------------+
+                        |                                   |
+                        v                                   v
+          +---------------------------+       +---------------------------+
+          |  Android App (OkHttp)     |       |  Web Vault (Flask/JS)     |
+          |  - Instant 2s Sync        |       |  - Drag & Drop Dropzone   |
+          |  - Zero-IP Cloud Pairing  |       |  - Cloud & LAN Modes      |
+          +---------------------------+       +---------------------------+
+```
+
+### Local LAN Fallback Architecture
 
 ```
                       +---------------------------------------+
@@ -74,14 +104,14 @@ ghost_fileshuttler/
 |   |   |   |-- java/com/ghost/fileshuttler/
 |   |   |   |   |-- data/
 |   |   |   |   |   |-- model/             # Data models (VaultFile, AuthResponse)
-|   |   |   |   |   `-- api/               # OkHttp 4.12 VaultApiService client
+|   |   |   |   |   `-- api/               # OkHttp 4.12 VaultApiService (Cloud & LAN)
 |   |   |   |   |-- ui/
-|   |   |   |   |   |-- auth/              # AuthActivity (4-digit numeric keypad)
+|   |   |   |   |   |-- auth/              # AuthActivity (4-digit PIN keypad, mode selector)
 |   |   |   |   |   `-- main/              # MainActivity, UploadFragment, ArchivesFragment
-|   |   |   |   |-- util/                  # SessionManager (PIN, host, port, cookies)
+|   |   |   |   |-- util/                  # SessionManager (VaultMode.CLOUD, Supabase config)
 |   |   |   |   `-- GhostApplication.kt    # Application entrypoint
 |   |   |   |-- res/
-|   |   |   |   |-- drawable/              # Vector drawables & shape backgrounds
+|   |   |   |   |-- drawable/              # Vector drawables (ic_cloud, ic_server, etc.)
 |   |   |   |   |-- layout/                # XML UI layouts with ViewBinding
 |   |   |   |   |-- values/                # 60-30-10 colors, strings, dimens, themes
 |   |   |   |   `-- mipmap-*/              # Calibrated adaptive & standard launcher icons
@@ -95,8 +125,8 @@ ghost_fileshuttler/
 |   `-- gradlew.bat                        # Windows Gradle batch script
 |-- app/                                   # Web Vault Backend (Python / Flask)
 |   |-- static/                            # CSS, JS, brand logos, dropzone styling
-|   |-- templates/                         # Jinja2 index vault view
-|   |-- app.py                             # Flask server, SQLAlchemy models, API routes
+|   |-- templates/                         # Jinja2 index vault view (.Vault Access)
+|   |-- app.py                             # Flask server, Supabase Cloud Gateway, SQLite/PostgreSQL
 |   `-- requirements.txt                   # Web dependencies
 |-- .github/
 |   `-- workflows/
@@ -121,9 +151,10 @@ ghost_fileshuttler/
 4. Select your connected Android device or emulator and click **Run**.
 
 ### 3. Server Configuration & Pairing
-1. On the authentication screen, tap **Target: http://10.17.178.160:5000** to configure your host machine's LAN IP address.
-2. Enter the same 4-digit PIN on both your phone and your desktop web browser.
-3. Once authenticated, files dropped from either device are shuttled in real time.
+1. On the authentication screen, the app connects to **Cloud Vault (Global Sync)** by default — no IP address is required.
+2. Enter the same 4-digit PIN (e.g. `1024`) on both your mobile device and your desktop web browser.
+3. Once authenticated, files uploaded on either device appear immediately in the Archives tab in real time.
+4. To connect to an air-gapped local server, tap the mode indicator to switch to **Local Area Network (LAN Node)** mode.
 
 ---
 
@@ -154,8 +185,7 @@ Native Android release APKs are compiled directly on GitHub Actions runners with
 
 3. **Start Flask Server:**
    ```powershell
-   cd app
-   python app.py
+   python app/app.py
    ```
    The web server listens on port 5000 and is accessible locally and across the Wi-Fi subnet.
 

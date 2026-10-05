@@ -131,7 +131,7 @@ p, .mil-light-soft {
 }
 
 .brand-logo-img {
-    height: 34px !important;
+    height: 30px !important;
     width: auto !important;
     object-fit: contain !important;
     display: block !important;
@@ -150,7 +150,7 @@ p, .mil-light-soft {
 }
 
 .auth-logo-img {
-    height: 60px !important;
+    height: 52px !important;
     width: auto !important;
     object-fit: contain !important;
     border-radius: 0 !important;

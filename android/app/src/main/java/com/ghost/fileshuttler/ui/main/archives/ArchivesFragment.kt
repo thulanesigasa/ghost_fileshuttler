@@ -124,7 +124,7 @@ class ArchivesFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             val destination = File(requireContext().cacheDir, file.filename)
-            val result = app.apiService.downloadFile(file.id, destination)
+            val result = app.apiService.downloadFile(file, destination)
 
             result.onSuccess { downloadedFile ->
                 shareFile(downloadedFile)
@@ -170,7 +170,7 @@ class ArchivesFragment : Fragment() {
     private fun executeDelete(file: VaultFile) {
         if (!isAdded) return
         viewLifecycleOwner.lifecycleScope.launch {
-            val result = app.apiService.deleteFile(file.id)
+            val result = app.apiService.deleteFile(file)
             result.onSuccess {
                 if (isAdded) {
                     Toast.makeText(requireContext(), "Deleted \"${file.filename}\"", Toast.LENGTH_SHORT).show()

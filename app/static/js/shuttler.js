@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <path d="M5 20H19V18H5V20ZM19 9H15V3H9V9H5L12 16L19 9Z" fill="currentColor"/>
                             </svg>
                         </a>
-                        <button onclick="deleteFile(${file.id}, '${file.filename}')" class="action-btn delete-btn" title="Delete">
+                        <button onclick="deleteFile('${file.id}', '${file.filename.replace(/'/g, "\\'")}')" class="action-btn delete-btn" title="Delete">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="currentColor"/>
                             </svg>
