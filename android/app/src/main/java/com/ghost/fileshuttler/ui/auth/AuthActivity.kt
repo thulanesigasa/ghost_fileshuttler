@@ -24,6 +24,7 @@ class AuthActivity : AppCompatActivity() {
     private var isAuthenticating = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.Theme_GhostFileShuttler)
         super.onCreate(savedInstanceState)
 
         // If session is already authenticated, jump directly to vault

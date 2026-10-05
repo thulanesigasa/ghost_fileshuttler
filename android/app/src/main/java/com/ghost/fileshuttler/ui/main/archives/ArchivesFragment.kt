@@ -23,7 +23,7 @@ import java.io.File
 class ArchivesFragment : Fragment() {
 
     private var _binding: FragmentArchivesBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
     private val app by lazy { requireActivity().application as GhostApplication }
 
     private lateinit var adapter: FileAdapter
@@ -35,7 +35,7 @@ class ArchivesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentArchivesBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -46,12 +46,14 @@ class ArchivesFragment : Fragment() {
             onDeleteClick = { file -> promptDelete(file) }
         )
 
-        binding.rvVaultFiles.layoutManager = LinearLayoutManager(requireContext())
-        binding.rvVaultFiles.adapter = adapter
+        _binding?.let { b ->
+            b.rvVaultFiles.layoutManager = LinearLayoutManager(requireContext())
+            b.rvVaultFiles.adapter = adapter
 
-        binding.swipeRefresh.setColorSchemeResources(com.ghost.fileshuttler.R.color.ghost_accent)
-        binding.swipeRefresh.setOnRefreshListener {
-            loadFiles(showLoadingIndicator = false)
+            b.swipeRefresh.setColorSchemeResources(com.ghost.fileshuttler.R.color.ghost_accent)
+            b.swipeRefresh.setOnRefreshListener {
+                loadFiles(showLoadingIndicator = false)
+            }
         }
     }
 
@@ -67,37 +69,48 @@ class ArchivesFragment : Fragment() {
 
     private fun startRealTimePolling() {
         pollingJob?.cancel()
+        if (_binding == null || !isAdded) return
+
         pollingJob = viewLifecycleOwner.lifecycleScope.launch {
             loadFiles(showLoadingIndicator = adapter.itemCount == 0)
             while (isActive) {
                 delay(2000) // 2-second real-time sync with desktop web vault
-                loadFiles(showLoadingIndicator = false)
+                if (_binding != null && isAdded) {
+                    loadFiles(showLoadingIndicator = false)
+                }
             }
         }
     }
 
     fun refreshFiles() {
-        loadFiles(showLoadingIndicator = false)
+        if (_binding != null && isAdded) {
+            loadFiles(showLoadingIndicator = false)
+        }
     }
 
     private fun loadFiles(showLoadingIndicator: Boolean) {
+        val b = _binding ?: return
+        if (!isAdded) return
+
         if (showLoadingIndicator) {
-            binding.progressArchives.visibility = View.VISIBLE
+            b.progressArchives.visibility = View.VISIBLE
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
             val result = app.apiService.getFiles()
-            binding.swipeRefresh.isRefreshing = false
-            binding.progressArchives.visibility = View.GONE
+            val currentBinding = _binding ?: return@launch
+            currentBinding.swipeRefresh.isRefreshing = false
+            currentBinding.progressArchives.visibility = View.GONE
 
             result.onSuccess { files ->
+                val liveBinding = _binding ?: return@onSuccess
                 adapter.submitList(files)
                 if (files.isEmpty()) {
-                    binding.layoutEmpty.visibility = View.VISIBLE
-                    binding.rvVaultFiles.visibility = View.GONE
+                    liveBinding.layoutEmpty.visibility = View.VISIBLE
+                    liveBinding.rvVaultFiles.visibility = View.GONE
                 } else {
-                    binding.layoutEmpty.visibility = View.GONE
-                    binding.rvVaultFiles.visibility = View.VISIBLE
+                    liveBinding.layoutEmpty.visibility = View.GONE
+                    liveBinding.rvVaultFiles.visibility = View.VISIBLE
                 }
             }.onFailure {
                 // Graceful fallback during polling
@@ -106,6 +119,7 @@ class ArchivesFragment : Fragment() {
     }
 
     private fun downloadAndShare(file: VaultFile) {
+        if (!isAdded) return
         Toast.makeText(requireContext(), "Downloading \"${file.filename}\"...", Toast.LENGTH_SHORT).show()
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -115,12 +129,15 @@ class ArchivesFragment : Fragment() {
             result.onSuccess { downloadedFile ->
                 shareFile(downloadedFile)
             }.onFailure { err ->
-                Toast.makeText(requireContext(), "Download failed: ${err.message}", Toast.LENGTH_LONG).show()
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Download failed: ${err.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }
 
     private fun shareFile(file: File) {
+        if (!isAdded) return
         try {
             val authority = "${requireContext().packageName}.fileprovider"
             val uri = FileProvider.getUriForFile(requireContext(), authority, file)
@@ -132,11 +149,14 @@ class ArchivesFragment : Fragment() {
             }
             startActivity(Intent.createChooser(shareIntent, "Share or Save File"))
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Failed to open file: ${e.message}", Toast.LENGTH_SHORT).show()
+            if (isAdded) {
+                Toast.makeText(requireContext(), "Failed to open file: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
     private fun promptDelete(file: VaultFile) {
+        if (!isAdded) return
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Delete File")
             .setMessage("Are you sure you want to remove \"${file.filename}\" from this partition?")
@@ -148,19 +168,25 @@ class ArchivesFragment : Fragment() {
     }
 
     private fun executeDelete(file: VaultFile) {
+        if (!isAdded) return
         viewLifecycleOwner.lifecycleScope.launch {
             val result = app.apiService.deleteFile(file.id)
             result.onSuccess {
-                Toast.makeText(requireContext(), "Deleted \"${file.filename}\"", Toast.LENGTH_SHORT).show()
-                loadFiles(showLoadingIndicator = false)
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Deleted \"${file.filename}\"", Toast.LENGTH_SHORT).show()
+                    loadFiles(showLoadingIndicator = false)
+                }
             }.onFailure { err ->
-                Toast.makeText(requireContext(), "Delete failed: ${err.message}", Toast.LENGTH_SHORT).show()
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Delete failed: ${err.message}", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+        pollingJob?.cancel()
         _binding = null
     }
 }

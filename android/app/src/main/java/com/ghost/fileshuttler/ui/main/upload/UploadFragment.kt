@@ -11,6 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.ghost.fileshuttler.GhostApplication
+import com.ghost.fileshuttler.R
 import com.ghost.fileshuttler.databinding.FragmentUploadBinding
 import kotlinx.coroutines.launch
 import java.io.File
@@ -19,7 +20,7 @@ import java.io.FileOutputStream
 class UploadFragment : Fragment() {
 
     private var _binding: FragmentUploadBinding? = null
-    private val binding get() = _binding!!
+    private val binding get() = _binding
     private val app by lazy { requireActivity().application as GhostApplication }
 
     private var selectedFile: File? = null
@@ -41,24 +42,26 @@ class UploadFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentUploadBinding.inflate(inflater, container, false)
-        return binding.root
+        return _binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.layoutDropzone.setOnClickListener {
-            if (!isUploading) {
-                filePickerLauncher.launch("*/*")
+        _binding?.let { b ->
+            b.layoutDropzone.setOnClickListener {
+                if (!isUploading) {
+                    filePickerLauncher.launch("*/*")
+                }
             }
-        }
 
-        binding.btnRemoveSelectedFile.setOnClickListener {
-            clearSelectedFile()
-        }
+            b.btnRemoveSelectedFile.setOnClickListener {
+                clearSelectedFile()
+            }
 
-        binding.btnShuttleUpload.setOnClickListener {
-            uploadCurrentFile()
+            b.btnShuttleUpload.setOnClickListener {
+                uploadCurrentFile()
+            }
         }
     }
 
@@ -78,7 +81,6 @@ class UploadFragment : Fragment() {
 
             val mimeType = requireContext().contentResolver.getType(uri) ?: "application/octet-stream"
 
-            // Copy content stream to cache file
             val tempFile = File(requireContext().cacheDir, fileName)
             requireContext().contentResolver.openInputStream(uri)?.use { input ->
                 FileOutputStream(tempFile).use { output ->
@@ -90,12 +92,16 @@ class UploadFragment : Fragment() {
             selectedFileName = fileName
             selectedMimeType = mimeType
 
-            binding.tvSelectedFileName.text = fileName
-            binding.tvSelectedFileSize.text = formatFileSize(fileSize)
-            binding.cardSelectedFile.visibility = View.VISIBLE
-            binding.tvDropzoneTitle.text = "Change Selected File"
+            _binding?.let { b ->
+                b.tvSelectedFileName.text = fileName
+                b.tvSelectedFileSize.text = formatFileSize(fileSize)
+                b.cardSelectedFile.visibility = View.VISIBLE
+                b.tvDropzoneTitle.text = "Change Selected File"
+            }
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Failed to read file: ${e.message}", Toast.LENGTH_SHORT).show()
+            if (isAdded) {
+                Toast.makeText(requireContext(), "Failed to read file: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -103,9 +109,11 @@ class UploadFragment : Fragment() {
         selectedFile = null
         selectedFileName = null
         selectedMimeType = null
-        binding.cardSelectedFile.visibility = View.GONE
-        binding.tvDropzoneTitle.text = getString(com.ghost.fileshuttler.R.string.dropzone_title)
-        binding.progressUpload.visibility = View.GONE
+        _binding?.let { b ->
+            b.cardSelectedFile.visibility = View.GONE
+            b.tvDropzoneTitle.text = getString(R.string.dropzone_title)
+            b.progressUpload.visibility = View.GONE
+        }
     }
 
     private fun uploadCurrentFile() {
@@ -113,24 +121,34 @@ class UploadFragment : Fragment() {
         val mime = selectedMimeType ?: "application/octet-stream"
 
         isUploading = true
-        binding.progressUpload.visibility = View.VISIBLE
-        binding.btnShuttleUpload.isEnabled = false
+        _binding?.let { b ->
+            b.progressUpload.visibility = View.VISIBLE
+            b.btnShuttleUpload.isEnabled = false
+        }
 
         lifecycleScope.launch {
             val result = app.apiService.uploadFile(file, mime) { progressPercent ->
-                binding.progressUpload.progress = progressPercent
+                activity?.runOnUiThread {
+                    _binding?.progressUpload?.progress = progressPercent
+                }
             }
 
             isUploading = false
-            binding.progressUpload.visibility = View.GONE
-            binding.btnShuttleUpload.isEnabled = true
+            _binding?.let { b ->
+                b.progressUpload.visibility = View.GONE
+                b.btnShuttleUpload.isEnabled = true
+            }
+
+            if (!isAdded) return@launch
 
             result.onSuccess {
                 Toast.makeText(requireContext(), "Transferred \"$selectedFileName\" to vault!", Toast.LENGTH_SHORT).show()
                 clearSelectedFile()
                 onUploadCompleted?.invoke()
             }.onFailure { err ->
-                Toast.makeText(requireContext(), "Upload failed: ${err.message}", Toast.LENGTH_LONG).show()
+                if (isAdded) {
+                    Toast.makeText(requireContext(), "Upload failed: ${err.message}", Toast.LENGTH_LONG).show()
+                }
             }
         }
     }

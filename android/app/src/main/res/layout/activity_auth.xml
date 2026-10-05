@@ -28,7 +28,7 @@
             android:orientation="vertical"
             android:padding="24dp">
 
-            <!-- Brand Header: 28dp Auth Logo per Rule 15/19 -->
+            <!-- Brand Header -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -37,9 +37,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuthLogo"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginEnd="10dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
                     android:contentDescription="@string/brand_title"
                     android:src="@drawable/ic_vault_brand" />
 
@@ -48,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.05"
                     android:text="@string/brand_title"
-                    android:textColor="@color/ghost_accent"
+                    android:textColor="@color/ghost_text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
