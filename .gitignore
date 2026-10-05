@@ -18,6 +18,7 @@ __pycache__/
 # Ghost Vault & Database files
 shuttle_vault/*
 !shuttle_vault/.gitkeep
+app/shuttle_vault/*
 /data/
 *.sqlite
 *.sqlite3

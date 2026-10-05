@@ -24,11 +24,13 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- Header Brand Logo: 24x24 per Rule 15/19 -->
+                <!-- Header Brand Logo -->
                 <ImageView
                     android:id="@+id/imgHeaderLogo"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:adjustViewBounds="true"
+                    android:background="@null"
                     android:contentDescription="@string/brand_title"
                     android:src="@drawable/ic_vault_brand" />
 
@@ -38,7 +40,7 @@
                     android:layout_marginStart="8dp"
                     android:letterSpacing="0.03"
                     android:text="@string/brand_title"
-                    android:textColor="@color/ghost_accent"
+                    android:textColor="@color/ghost_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 

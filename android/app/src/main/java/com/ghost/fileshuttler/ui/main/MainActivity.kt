@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                 binding.dotUpload.visibility = View.INVISIBLE
 
                 replaceFragment(archivesFragment)
-                archivesFragment.refreshFiles()
             }
         }
     }
@@ -123,6 +122,6 @@ class MainActivity : AppCompatActivity() {
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragmentContainer, fragment)
-            .commit()
+            .commitAllowingStateLoss()
     }
 }

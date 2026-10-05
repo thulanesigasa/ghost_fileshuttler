@@ -131,10 +131,13 @@ p, .mil-light-soft {
 }
 
 .brand-logo-img {
-    height: 26px !important;
+    height: 34px !important;
     width: auto !important;
     object-fit: contain !important;
     display: block !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: none !important;
 }
 
 .auth-brand-badge {
@@ -142,13 +145,17 @@ p, .mil-light-soft {
     justify-content: center !important;
     align-items: center !important;
     margin-bottom: 14px !important;
+    background: transparent !important;
+    border: none !important;
 }
 
 .auth-logo-img {
-    height: 48px !important;
+    height: 60px !important;
     width: auto !important;
     object-fit: contain !important;
-    border-radius: 8px !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    border: none !important;
 }
 
 .mil-frame-info {

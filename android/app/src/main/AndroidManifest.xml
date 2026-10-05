@@ -23,6 +23,7 @@
             android:name=".ui.auth.AuthActivity"
             android:exported="true"
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.GhostFileShuttler.Splash"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

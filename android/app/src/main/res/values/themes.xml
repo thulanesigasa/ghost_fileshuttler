@@ -21,4 +21,8 @@
         <item name="android:navigationBarColor">@color/ghost_background</item>
         <item name="android:windowLightStatusBar">false</item>
     </style>
+
+    <style name="Theme.GhostFileShuttler.Splash" parent="Theme.GhostFileShuttler">
+        <item name="android:windowBackground">@drawable/bg_splash_screen</item>
+    </style>
 </resources>
