@@ -15,6 +15,29 @@ app = Flask(__name__)
 # In production, use a strong random secret key.
 app.secret_key = os.environ.get('SECRET_KEY', 'ghost_super_secret_key')
 
+# Native .env loader (zero external dependencies)
+def load_env_file():
+    env_paths = [
+        os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '.env')),
+        os.path.abspath(os.path.join(os.path.dirname(__file__), '.env')),
+        os.path.abspath('.env')
+    ]
+    for p in env_paths:
+        if os.path.exists(p):
+            with open(p, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if not line or line.startswith('#') or '=' not in line:
+                        continue
+                    key, val = line.split('=', 1)
+                    key = key.strip()
+                    val = val.strip().strip("'\"")
+                    if key and key not in os.environ:
+                        os.environ[key] = val
+            break
+
+load_env_file()
+
 # Supabase Cloud Vault Gateway Configuration (Cross-network synchronization)
 SUPABASE_URL = os.environ.get('SUPABASE_URL', 'https://wvhvjovmshgacgqjgtjy.supabase.co').rstrip('/')
 SUPABASE_ANON_KEY = os.environ.get('SUPABASE_ANON_KEY', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind2aHZqb3Ztc2hnYWNncWpndGp5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDEyMTgwOTEsImV4cCI6MjA1Njc5NDA5MX0.Z0')
