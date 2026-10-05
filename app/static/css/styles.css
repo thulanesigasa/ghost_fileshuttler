@@ -125,11 +125,30 @@ p, .mil-light-soft {
 }
 
 .mil-logo {
-    font-size: 20px !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    letter-spacing: -0.5px !important;
+    display: inline-flex !important;
+    align-items: center !important;
     text-decoration: none !important;
+}
+
+.brand-logo-img {
+    height: 26px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    display: block !important;
+}
+
+.auth-brand-badge {
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-bottom: 14px !important;
+}
+
+.auth-logo-img {
+    height: 48px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    border-radius: 8px !important;
 }
 
 .mil-frame-info {
@@ -257,16 +276,23 @@ p, .mil-light-soft {
 
 .drop-icon {
     color: var(--accent) !important;
-    margin-bottom: 10px !important;
+    margin-bottom: 12px !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
 }
 
 .drop-icon svg {
-    width: 32px !important;
-    height: 32px !important;
+    width: 38px !important;
+    height: 38px !important;
     stroke: var(--accent) !important;
+    fill: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
 }
 
 .drop-zone h5 {

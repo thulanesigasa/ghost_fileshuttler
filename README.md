@@ -4,8 +4,9 @@
 ![Proxy](https://img.shields.io/badge/Proxy-Nginx_OWASP_CRS-009639?style=for-the-badge&logo=nginx&logoColor=white)
 ![Database](https://img.shields.io/badge/Database-PostgreSQL_15-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Theme](https://img.shields.io/badge/Theme-Ghost_Cyan-00c3cf?style=for-the-badge)
-![Real-Time](https://img.shields.io/badge/Sync-1s_Polling-00ff9d?style=for-the-badge)
+![Real-Time](https://img.shields.io/badge/Sync-Real--Time_2s-00ff9d?style=for-the-badge)
 ![Scale](https://img.shields.io/badge/Scale-Viewport_Calibrated-00f0ff?style=for-the-badge)
+![Brand](https://img.shields.io/badge/Brand-.Vault_Access-ffffff?style=for-the-badge)
 
 A production-ready, ultra-secure, and lightning-fast local-network file-sharing system. Designed with a premium Ghost Cyan aesthetic, it allows for seamless file transfers between devices (Mobile, Desktop, Tablet) without leaving your local network.
 
@@ -13,9 +14,9 @@ A production-ready, ultra-secure, and lightning-fast local-network file-sharing 
 
 ## Features
 
-- **Real-Time Sync:** Files appear across all connected nodes within 1 second without refreshing.
+- **Real-Time Sync:** Files appear across all connected nodes within 2 seconds without refreshing.
+- **4-Digit Secure Vault Pairing:** Protected by SHA-256 tenant isolation. Entering the matching 4-digit PIN on any phone, tablet, or PC connects the device to the identical vault partition, enabling instant cross-device file shuttling.
 - **Viewport-Calibrated Scale:** The 100% default zoom matches the compact, balanced proportions of 67% zoom, ensuring the entire terminal and vault cards fit seamlessly within standard laptop and desktop viewports without clipping.
-- **Secure Vault:** Protected by PIN-based authentication with SHA-256 tenant isolation.
 - **Cross-Platform:** Fully responsive UI tailored for Mobile, Tablet, and Desktop.
 - **Themed Modals:** Custom-built Ghost dialogs for a premium user experience.
 - **Easy Management:** Upload, Download, and Permanently Delete files from any device.
