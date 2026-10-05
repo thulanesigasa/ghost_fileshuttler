@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 60-30-10 Design Rule per User Rule 1 -->
+    <!-- 60% Dominant Background -->
+    <color name="ghost_background">#0A0C10</color>
+    <color name="ghost_background_elevated">#0E1117</color>
+
+    <!-- 30% Surface / Panel -->
+    <color name="ghost_surface">#161A22</color>
+    <color name="ghost_surface_hover">#1E2430</color>
+    <color name="ghost_border">#1FFFFFFF</color>
+    <color name="ghost_border_active">#5900F0FF</color>
+
+    <!-- 10% Accent (Ghost Cyan) -->
+    <color name="ghost_accent">#00F0FF</color>
+    <color name="ghost_accent_hover">#00C3CF</color>
+    <color name="ghost_accent_dark">#00474F</color>
+
+    <!-- Typography & Neutrals -->
+    <color name="ghost_text_primary">#FFFFFF</color>
+    <color name="ghost_text_secondary">#94A3B8</color>
+    <color name="ghost_text_muted">#64748B</color>
+
+    <!-- Danger / Functional -->
+    <color name="ghost_danger">#FF5555</color>
+    <color name="ghost_danger_bg">#1FFF5555</color>
+</resources>

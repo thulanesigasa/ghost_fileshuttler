@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ghost_background">
+
+    <!-- Top Chrome / App Bar: 56dp per Rule 15 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/ghost_surface"
+        app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingHorizontal="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Header Brand Logo: 24x24 per Rule 15/19 -->
+                <ImageView
+                    android:id="@+id/imgHeaderLogo"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:contentDescription="@string/brand_title"
+                    android:src="@drawable/ic_vault_brand" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:letterSpacing="0.03"
+                    android:text="@string/brand_title"
+                    android:textColor="@color/ghost_accent"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- PIN Pill Indicator -->
+                <TextView
+                    android:id="@+id/tvPinPill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_tab_bar"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:text="PIN: ----"
+                    android:textColor="@color/ghost_accent"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <!-- Lock Action Button -->
+                <ImageButton
+                    android:id="@+id/btnLock"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/lock_vault"
+                    android:src="@drawable/ic_lock"
+                    app:tint="@color/ghost_text_secondary" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Fragment Container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+    <!-- Floating Pill Bottom Tab Bar per Rule 20: 280dp x 50dp, bottom 24dp -->
+    <LinearLayout
+        android:id="@+id/floatingPillTabBar"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/bg_pill_tab_bar"
+        android:elevation="8dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="4dp">
+
+        <!-- Tab 1: Upload -->
+        <LinearLayout
+            android:id="@+id/tabUpload"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iconUpload"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/tab_upload"
+                android:src="@drawable/ic_upload_cloud"
+                app:tint="@color/ghost_accent" />
+
+            <TextView
+                android:id="@+id/labelUpload"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:letterSpacing="0.02"
+                android:text="@string/tab_upload"
+                android:textColor="@color/ghost_accent"
+                android:textSize="9sp"
+                android:textStyle="bold" />
+
+            <View
+                android:id="@+id/dotUpload"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_pin_dot_filled" />
+        </LinearLayout>
+
+        <!-- Tab 2: Archives -->
+        <LinearLayout
+            android:id="@+id/tabArchives"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/iconArchives"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:contentDescription="@string/tab_archives"
+                android:src="@drawable/ic_folder_archive"
+                app:tint="@color/ghost_text_secondary" />
+
+            <TextView
+                android:id="@+id/labelArchives"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:letterSpacing="0.02"
+                android:text="@string/tab_archives"
+                android:textColor="@color/ghost_text_secondary"
+                android:textSize="9sp" />
+
+            <View
+                android:id="@+id/dotArchives"
+                android:layout_width="4dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="2dp"
+                android:background="@drawable/bg_pin_dot_empty"
+                android:visibility="invisible" />
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
