@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Ghost_FileShuttler</string>
+    <string name="brand_title">.Vault Access</string>
+    <string name="auth_subtitle">Enter 4-digit security PIN to unlock your vault partition.</string>
+    <string name="tab_upload">Upload</string>
+    <string name="tab_archives">Archives</string>
+    <string name="dropzone_title">Tap to Choose File</string>
+    <string name="dropzone_subtitle">Any file type up to 500MB supported</string>
+    <string name="shuttle_to_vault">Shuttle to Vault</string>
+    <string name="empty_archives_title">Partition is Empty</string>
+    <string name="empty_archives_subtitle">No files in this vault partition yet. Drop files from web browser or upload above.</string>
+    <string name="server_settings">Server Settings</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="lock_vault">Lock Vault</string>
+</resources>

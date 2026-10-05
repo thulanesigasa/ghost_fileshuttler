@@ -1,0 +1,82 @@
+name: Android Native Kotlin APK Compilation & Distribution
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-ci.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-ci.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  build-native-apk:
+    name: Build Native Android APK (Kotlin)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: android
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Eclipse Temurin Java 17 (Rule 21)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Setup Android SDK (Rule 21)
+        uses: android-actions/setup-android@v3
+
+      - name: Make Gradlew Executable
+        run: chmod +x gradlew
+
+      - name: Dynamic VersionCode Injection (Rule 21)
+        run: |
+          sed -i 's/versionCode = 1/versionCode = ${{ github.run_number }}/g' app/build.gradle.kts
+          echo "Injected dynamic versionCode: ${{ github.run_number }}"
+
+      - name: Compile Native Android Release APK (Rule 21)
+        run: ./gradlew assembleRelease -x lint -x test --no-daemon
+
+      - name: Locate & Package Release APK
+        run: |
+          mkdir -p dist
+          APK_PATH=$(find app/build/outputs/apk/release -name "*.apk" | head -n 1)
+          if [ -z "$APK_PATH" ]; then
+            APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
+          fi
+          echo "Found compiled APK at: $APK_PATH"
+          cp "$APK_PATH" "dist/ghost-fileshuttler-v1.0.1.apk"
+          echo "COPIED_APK=dist/ghost-fileshuttler-v1.0.1.apk" >> $GITHUB_ENV
+
+      - name: Upload Binary CI Artifact (Rule 21)
+        uses: actions/upload-artifact@v4
+        with:
+          name: ghost-fileshuttler-v1.0.1-apk
+          path: android/${{ env.COPIED_APK }}
+          retention-days: 30
+
+      - name: Distribute to GitHub Releases (Rule 21)
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RELEASE_TAG="v1.0.1"
+          if ! gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
+            gh release create "$RELEASE_TAG" --title "Ghost FileShuttler $RELEASE_TAG" --notes "Automated GitHub Actions native Android compilation (Kotlin + Gradle)."
+          fi
+          gh release upload "$RELEASE_TAG" "${{ env.COPIED_APK }}" --clobber

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.GhostFileShuttler" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- 60% Dominant Background -->
+        <item name="android:windowBackground">@color/ghost_background</item>
+        <item name="colorSurface">@color/ghost_surface</item>
+        <item name="android:colorBackground">@color/ghost_background</item>
+
+        <!-- 10% Accent Color -->
+        <item name="colorPrimary">@color/ghost_accent</item>
+        <item name="colorOnPrimary">@color/ghost_background</item>
+        <item name="colorSecondary">@color/ghost_accent</item>
+        <item name="colorOnSecondary">@color/ghost_background</item>
+
+        <!-- Text Colors -->
+        <item name="android:textColorPrimary">@color/ghost_text_primary</item>
+        <item name="android:textColorSecondary">@color/ghost_text_secondary</item>
+
+        <!-- System Bars -->
+        <item name="android:statusBarColor">@color/ghost_background</item>
+        <item name="android:navigationBarColor">@color/ghost_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+</resources>

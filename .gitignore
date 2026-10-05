@@ -18,17 +18,28 @@ __pycache__/
 # Ghost Vault & Database files
 shuttle_vault/*
 !shuttle_vault/.gitkeep
-data/
+/data/
 *.sqlite
 *.sqlite3
 *.db
 *.db-journal
 
-# Next.js / Node.js
-.next/
-node_modules/
+# Android Native Gradle Build Artifacts
+.gradle/
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/dist/
 dist/
 build/
+*.apk
+*.aab
+*.keystore
+*.jks
+*.hprof
+.cxx/
+
 
 # Certificates & Keys
 nginx/certs/
@@ -43,3 +54,4 @@ nginx/certs/
 *.swo
 .DS_Store
 Thumbs.db
+
