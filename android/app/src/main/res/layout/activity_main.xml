@@ -24,11 +24,11 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!-- Header Brand Logo (reduced by 20% per directive) -->
+                <!-- Header Brand Logo (reduced by additional 35% per directive) -->
                 <ImageView
                     android:id="@+id/imgHeaderLogo"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
                     android:adjustViewBounds="true"
                     android:background="@null"
                     android:contentDescription="@string/brand_title"

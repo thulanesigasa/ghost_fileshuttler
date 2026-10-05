@@ -66,13 +66,21 @@ jobs:
             APK_PATH=$(find app/build/outputs/apk -name "*.apk" | head -n 1)
           fi
           echo "Found compiled APK at: $APK_PATH"
-          cp "$APK_PATH" "dist/ghost-fileshuttler-v1.0.1.apk"
-          echo "COPIED_APK=dist/ghost-fileshuttler-v1.0.1.apk" >> $GITHUB_ENV
+          VERSION_NAME=$(grep 'versionName' app/build.gradle.kts | head -n 1 | awk -F '"' '{print $2}')
+          if [ -z "$VERSION_NAME" ]; then
+            VERSION_NAME="1.0.2"
+          fi
+          RELEASE_TAG="v${VERSION_NAME}"
+          echo "VERSION_NAME=${VERSION_NAME}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=${RELEASE_TAG}" >> $GITHUB_ENV
+          OUTPUT_APK="dist/ghost-fileshuttler-v${VERSION_NAME}.apk"
+          cp "$APK_PATH" "$OUTPUT_APK"
+          echo "COPIED_APK=${OUTPUT_APK}" >> $GITHUB_ENV
 
       - name: Upload Binary CI Artifact (Rule 21)
         uses: actions/upload-artifact@v4
         with:
-          name: ghost-fileshuttler-v1.0.1-apk
+          name: ghost-fileshuttler-release-apk
           path: android/${{ env.COPIED_APK }}
           retention-days: 30
 
@@ -81,7 +89,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          RELEASE_TAG="v1.0.1"
           if ! gh release view "$RELEASE_TAG" > /dev/null 2>&1; then
             gh release create "$RELEASE_TAG" --title "Ghost FileShuttler $RELEASE_TAG" --notes "Automated GitHub Actions native Android compilation (Kotlin + Gradle)."
           fi
