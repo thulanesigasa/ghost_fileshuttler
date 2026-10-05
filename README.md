@@ -20,8 +20,7 @@ A production-ready, ultra-secure, and lightning-fast cross-platform file-shuttli
 - **Cross-Network Global File Shuttling (Supabase Cloud Vault):** Bypass direct IP addresses and Wi-Fi boundaries. Devices on separate networks (mobile data, remote offices, separate cities) pair instantly through an identical 4-digit PIN.
 - **Zero-Configuration Instant Pairing:** When launching the Android app or web interface, entering a 4-digit secret PIN (e.g. `1024`) joins the device to that secret partition. Files uploaded on PC appear immediately on phone in real-time.
 - **Auto-Purge & Cloud Hygiene:** Downloaded or removed files are seamlessly deleted from cloud storage and database records, preventing redundant cloud storage consumption.
-- **Dual-Mode Connectivity (Cloud & Local LAN):** Default Cloud Vault mode for global sync with optional toggle to Local Area Network (Flask/Nginx) for isolated air-gapped environments.
-- **Calibrated Brand Typography & Proportional Logos:** Features precise brand styling where **.Vault** is bold and **Access** is regular text weight in pure white (#FFFFFF), paired with calibrated 20% logo sizing reduction across splash screens (182x22dp), in-app logos (30x30dp / 25x25dp), and web styling (24px / 42px).
+- **Calibrated Brand Typography & Proportional Logos:** Features precise brand styling where **.Vault** is bold and **Access** is regular text weight in pure white (#FFFFFF), paired with calibrated compact logo sizing across splash screens (118x14dp), in-app logos (20x20dp / 16x16dp), and web styling (16px / 27px).
 - **Floating Pill Bottom Navigation:** Implements the curved rectangular floating pill tab bar with dynamic horizontal centering (280dp x 50dp, 16dp radius, 4x4 active dot indicator) with Upload and Archives screens.
 - **Direct GitHub Actions Native Compilation:** Compiles release APK binaries directly on GitHub Actions runners using open-source Eclipse Temurin Java 17 and Android SDK toolchains without relying on third-party cloud build credits.
 - **Automatic GitHub Releases Distribution:** Every release compiled in CI is automatically packaged and published to GitHub Releases as a downloadable APK.
@@ -165,7 +164,7 @@ Native Android release APKs are compiled directly on GitHub Actions runners with
 - **Android SDK:** Command-line tools and build-tools via `android-actions/setup-android@v3`
 - **Build Execution:** `./gradlew assembleRelease -x lint -x test --no-daemon`
 - **Dynamic VersionCode:** Automatically matches `${{ github.run_number }}`
-- **Asset Distribution:** Uploaded to GitHub Releases as `ghost-fileshuttler-v1.0.1.apk`
+- **Asset Distribution:** Dynamically published and uploaded to GitHub Releases matching the active release version (e.g. `ghost-fileshuttler-v1.0.2.apk`).
 
 ---
 
