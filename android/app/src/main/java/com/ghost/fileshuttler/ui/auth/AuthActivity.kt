@@ -5,6 +5,9 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -13,6 +16,7 @@ import com.ghost.fileshuttler.GhostApplication
 import com.ghost.fileshuttler.R
 import com.ghost.fileshuttler.databinding.ActivityAuthBinding
 import com.ghost.fileshuttler.ui.main.MainActivity
+import com.ghost.fileshuttler.util.VaultMode
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.launch
 
@@ -43,7 +47,13 @@ class AuthActivity : AppCompatActivity() {
     }
 
     private fun updateServerTargetText() {
-        binding.tvServerTarget.text = "Target: ${app.sessionManager.baseUrl}"
+        if (app.sessionManager.mode == VaultMode.CLOUD) {
+            binding.imgServerModeIcon.setImageResource(R.drawable.ic_cloud)
+            binding.tvServerTarget.text = "Mode: Cloud Vault (Global Sync)"
+        } else {
+            binding.imgServerModeIcon.setImageResource(R.drawable.ic_server)
+            binding.tvServerTarget.text = "LAN: ${app.sessionManager.baseUrl}"
+        }
     }
 
     private fun setupKeypad() {
@@ -120,13 +130,47 @@ class AuthActivity : AppCompatActivity() {
 
     private fun showServerConfigDialog() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_server_config, null)
+        val rgMode = dialogView.findViewById<RadioGroup>(R.id.rgMode)
+        val rbModeCloud = dialogView.findViewById<RadioButton>(R.id.rbModeCloud)
+        val rbModeLan = dialogView.findViewById<RadioButton>(R.id.rbModeLan)
+
+        val layoutCloudConfig = dialogView.findViewById<LinearLayout>(R.id.layoutCloudConfig)
+        val etSupabaseUrl = dialogView.findViewById<EditText>(R.id.etSupabaseUrl)
+        val etSupabaseKey = dialogView.findViewById<EditText>(R.id.etSupabaseKey)
+
+        val layoutLanConfig = dialogView.findViewById<LinearLayout>(R.id.layoutLanConfig)
         val etHost = dialogView.findViewById<EditText>(R.id.etHostIp)
         val etPort = dialogView.findViewById<EditText>(R.id.etPort)
+
         val btnCancel = dialogView.findViewById<Button>(R.id.btnCancel)
         val btnSave = dialogView.findViewById<Button>(R.id.btnSave)
 
+        // Initialize values from session
+        val currentMode = app.sessionManager.mode
+        if (currentMode == VaultMode.CLOUD) {
+            rbModeCloud.isChecked = true
+            layoutCloudConfig.visibility = View.VISIBLE
+            layoutLanConfig.visibility = View.GONE
+        } else {
+            rbModeLan.isChecked = true
+            layoutCloudConfig.visibility = View.GONE
+            layoutLanConfig.visibility = View.VISIBLE
+        }
+
+        etSupabaseUrl.setText(app.sessionManager.supabaseUrl)
+        etSupabaseKey.setText(app.sessionManager.supabaseAnonKey)
         etHost.setText(app.sessionManager.host)
         etPort.setText(app.sessionManager.port)
+
+        rgMode.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.rbModeCloud) {
+                layoutCloudConfig.visibility = View.VISIBLE
+                layoutLanConfig.visibility = View.GONE
+            } else {
+                layoutCloudConfig.visibility = View.GONE
+                layoutLanConfig.visibility = View.VISIBLE
+            }
+        }
 
         val dialog = AlertDialog.Builder(this)
             .setView(dialogView)
@@ -134,13 +178,22 @@ class AuthActivity : AppCompatActivity() {
 
         btnCancel.setOnClickListener { dialog.dismiss() }
         btnSave.setOnClickListener {
+            val selectedMode = if (rbModeCloud.isChecked) VaultMode.CLOUD else VaultMode.LAN
+            app.sessionManager.mode = selectedMode
+
+            val newCloudUrl = etSupabaseUrl.text.toString().trim()
+            val newCloudKey = etSupabaseKey.text.toString().trim()
+            if (newCloudUrl.isNotEmpty()) app.sessionManager.supabaseUrl = newCloudUrl
+            if (newCloudKey.isNotEmpty()) app.sessionManager.supabaseAnonKey = newCloudKey
+
             val newHost = etHost.text.toString().trim()
             val newPort = etPort.text.toString().trim()
             if (newHost.isNotEmpty()) app.sessionManager.host = newHost
             if (newPort.isNotEmpty()) app.sessionManager.port = newPort
+
             updateServerTargetText()
             dialog.dismiss()
-            Toast.makeText(this, "Target server updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Connection configuration saved", Toast.LENGTH_SHORT).show()
         }
 
         dialog.show()
